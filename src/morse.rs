@@ -1,7 +1,7 @@
 // TODO: automatic detection
 pub fn morse(query: &str) -> String {
     if query.chars().all(|x| "._- ".contains(x)) {
-        morse_decode(query)
+        morse_decode(&query.replace("-", "_"))
     } else {
         morse_encode(query)
     }

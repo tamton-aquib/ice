@@ -15,6 +15,7 @@ pub fn str_x_str(a: &str, b: &str) -> String {
         .collect::<String>()
 }
 
+// TODO: not working for some reason
 /// Single byte xoring.
 /// Tries on bytes 0-255
 /// * `s`: &str (query string)

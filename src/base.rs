@@ -13,7 +13,7 @@ pub fn b64(s: &str) -> String {
 pub fn b32(s: &str) -> String {
     match base32::decode(base32::Alphabet::RFC4648 { padding: true }, s) {
         Some(n) => {
-            println!("Decoding...");
+            // println!("Decoding...");
             n.iter().map(|i| *i as char).collect::<String>()
         }
         None => base64::encode(s),
