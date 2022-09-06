@@ -9,25 +9,50 @@ version: 0.0.13
 
 *  PLANNED TODO
 **  General
+    - [x] a1z26
+    - [ ] railfence
+    - [ ] bacon
+    - [ ] bifid
+    - [ ] affine
+    - [ ] atbash
     - [ ] substitution
-    - [-] hasher using dehash api -> temp not working.
+    - [=] hasher using dehash api -> temp not working.
+    - [ ] url encode/decode
+
+**  Basic manipulation
+    - [x] upper, lower
+    - [x] remove whitespace
+    - [ ] sort, uniq, filter
+    - [ ] remove line numbers or recurring patterns
 
 **  Caesar
-    -- [x] caesar
-    -- [x] rot13
-    -- [ ] vigenere
+    - [x] caesar
+    - [x] rot13
+    - [ ] rot47
+    - [ ] vigenere
+    - [ ] score system
 
 **  XOR
-    -- [-] single byte
-    -- [-] hex to hex
-    -- [-] string to string
+    - [-] single byte
+    - [-] hex to hex
+    - [-] string to string
 
 **  BASE
-    -- [x] 2: binary
-    -- [x] 8: octal
-    -- [x] 16: hex
-    -- [x] base32
-    -- [x] base64
+    - [x] base02 (binary)
+    - [x] base08 (octa)
+    - [x] base16 (hex)
+    - [x] base32
+    - [x] base64
+    - [ ] base45
+    - [ ] base58
+    - [ ] base62
+    - [ ] base85
+
+** Extarctors (extract from string)
+   - [ ] ip, email, mac, date formats, etc
+   - [ ] exif metadata.
+   - [ ] extract from binary flag format
+   - [ ] magic bytes
 
 **  Advanced
     - [ ] Advanced stuff (maybe wont do this)
@@ -39,4 +64,5 @@ version: 0.0.13
    - [-] write tests for each mod.
    - [ ] Reduce the number of unwraps.
    - [ ] Automatic result finding.
+   - [ ] identification by similarity.
 

@@ -1,5 +1,6 @@
 use ctfu::base;
 use ctfu::caesar;
+use ctfu::general;
 use ctfu::manipulation;
 use ctfu::morse;
 use ctfu::xor;
@@ -47,9 +48,14 @@ fn main() {
         "hex" | "b16" => base::hexadecimal(query),
         "binary" | "bin" => base::binary(query),
 
+        // Manipulation commands
         "lower" => manipulation::lower(query),
         "upper" => manipulation::lower(query),
         "remove_whitespace" | "rw" => manipulation::lower(query),
+
+        // General
+        "a1z26" | "az" => general::a1z26(query),
+
         _ => String::from("Subcommand not found!"),
     };
 
