@@ -9,13 +9,12 @@ pub fn rot13(query: &str) -> String {
             'n'..='z' | 'N'..='Z' => ((c as u8) - 13) as char,
             _ => c,
         })
-        .collect::<String>()
+        .collect()
 }
 
 /// Caesar cipher for 0-25(a-z)
-/// Returns a vector of Strings (25 no.)
-/// * `a`: &str (query string)
-pub fn caesar(query: &str) -> Vec<String> {
+/// * `query`: &str (query string)
+pub fn caesar(query: &str) -> String {
     (0..26)
         .map(|i| {
             let result = query.chars().map(|c| match c {
@@ -24,9 +23,9 @@ pub fn caesar(query: &str) -> Vec<String> {
                 _ => c,
             });
 
-            format!("[{:02}] {}", i, result.collect::<String>())
+            format!("[{:02}] {}\n", i, result.collect::<String>())
         })
-        .collect::<Vec<String>>()
+        .collect()
 }
 
 // TODO: to be completed!
@@ -38,5 +37,5 @@ pub fn vigenere(s: &str, key: &str) -> String {
     s.chars()
         .zip(key.chars().cycle())
         .map(|(x, y)| (((x as u8) + (y as u8)) % 26) as char)
-        .collect::<String>()
+        .collect()
 }

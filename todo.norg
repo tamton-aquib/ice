@@ -1,0 +1,42 @@
+@document.meta
+title: Todo
+description: list of todos for ctfu
+authors: me
+categories: CTF, security
+created: 2022-09-06
+version: 0.0.13
+@end
+
+*  PLANNED TODO
+**  General
+    - [ ] substitution
+    - [-] hasher using dehash api -> temp not working.
+
+**  Caesar
+    -- [x] caesar
+    -- [x] rot13
+    -- [ ] vigenere
+
+**  XOR
+    -- [-] single byte
+    -- [-] hex to hex
+    -- [-] string to string
+
+**  BASE
+    -- [x] 2: binary
+    -- [x] 8: octal
+    -- [x] 16: hex
+    -- [x] base32
+    -- [x] base64
+
+**  Advanced
+    - [ ] Advanced stuff (maybe wont do this)
+    - [ ] ECB and CBC
+    - [ ] RSA
+
+*  PROJECT TODO
+   - [ ] scoring methods for efficiency.
+   - [-] write tests for each mod.
+   - [ ] Reduce the number of unwraps.
+   - [ ] Automatic result finding.
+

@@ -1,5 +1,6 @@
 use ctfu::base;
 use ctfu::caesar;
+use ctfu::manipulation;
 use ctfu::morse;
 use ctfu::xor;
 // TODO: add colors
@@ -15,11 +16,11 @@ fn main() {
     }
 
     let c_type = &args[1];
-    let query = &args[2];
+    let query = &args[2].trim();
 
-    let res = match c_type.as_str() {
+    let res = match c_type.trim() {
         // Caesar commands
-        "caesar" => caesar::caesar(query).join("\n"),
+        "caesar" | "ceasar" => caesar::caesar(query),
         "rot13" | "rot" => caesar::rot13(query),
         "vigenere" => {
             if &args.len() >= &4 {
@@ -34,21 +35,10 @@ fn main() {
         "morse" => morse::morse(query),
 
         // XOR commands
-        "hxh" => {
-            let one = &args[2];
-            let two = &args[3];
-            xor::hex_x_hex(one, two)
-        }
-        "sxs" => {
-            let one = &args[2];
-            let two = &args[3];
-            xor::str_x_str(one, two)
-        }
-        "sxb" | "bxs" => {
-            let one = &args[2];
-            xor::str_x_byte(one)
-        }
         "xor" => String::from("Please select one from hxh, sxs, sxb instead!"),
+        "hxh" => xor::hex_x_hex(&args[2], &args[3]),
+        "sxs" => xor::str_x_str(&args[2], &args[3]),
+        "sxb" | "bxs" => xor::str_x_byte(&args[2]),
 
         // Base commands
         "b64" => base::b64(query),
@@ -57,10 +47,13 @@ fn main() {
         "hex" | "b16" => base::hexadecimal(query),
         "binary" | "bin" => base::binary(query),
 
+        "lower" => manipulation::lower(query),
+        "upper" => manipulation::lower(query),
+        "remove_whitespace" | "rw" => manipulation::lower(query),
         _ => String::from("Subcommand not found!"),
     };
 
-    println!("Result: {}", res);
+    println!("Result\n======\n{}", res);
 }
 
 // COMPLETED:
