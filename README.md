@@ -1,5 +1,5 @@
 # Ice
-A command line utility to help with simple stuff in CTFs. <br />
+[Ice](https://gameofthrones.fandom.com/wiki/Ice) is a command line utility to help with simple stuff in CTFs. <br />
 Extracted from [graveyard](https://github.com/tamton-aquib/graveyard)
 
 ### Includes
