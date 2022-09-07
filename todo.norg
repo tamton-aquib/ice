@@ -1,6 +1,6 @@
 @document.meta
 title: Todo
-description: list of todos for ctfu
+description: list of todos for ice
 authors: me
 categories: CTF, security
 created: 2022-09-06
@@ -65,4 +65,5 @@ version: 0.0.13
    - [ ] Reduce the number of unwraps.
    - [ ] Automatic result finding.
    - [ ] identification by similarity.
+   - [ ] add aliases for each subcommand.
 

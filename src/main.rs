@@ -1,9 +1,9 @@
-use ctfu::base;
-use ctfu::caesar;
-use ctfu::general;
-use ctfu::manipulation;
-use ctfu::morse;
-use ctfu::xor;
+use ice::base;
+use ice::caesar;
+use ice::general;
+use ice::manipulation;
+use ice::morse;
+use ice::xor;
 // TODO: add colors
 // TODO: complete xor.rs
 // TODO: start general.rs
@@ -11,8 +11,12 @@ use ctfu::xor;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() <= 1 {
-        println!("Please enter 2 args atleast!");
+    if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) {
+        println!("Ice - A simple ctf tool store.");
+        return;
+    }
+    if args.len() <= 2 {
+        println!("Please provide an argument!");
         return;
     }
 
