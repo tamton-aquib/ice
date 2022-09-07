@@ -12,7 +12,7 @@ pub fn str_x_str(a: &str, b: &str) -> String {
     a.chars()
         .zip(b.chars().cycle())
         .map(|(i, j)| ((i as u8) ^ (j as u8)) as char)
-        .collect::<String>()
+        .collect()
 }
 
 // TODO: not working for some reason
@@ -30,8 +30,7 @@ pub fn str_x_byte(s: &str) -> String {
             ans.is_ascii()
         })
         .map(|n| n as char)
-        .collect::<String>()
-    // println!("{bruh:?}");
+        .collect()
 }
 
 // TODO: to be completed!

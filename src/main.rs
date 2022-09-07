@@ -1,9 +1,4 @@
-use ice::base;
-use ice::caesar;
-use ice::general;
-use ice::manipulation;
-use ice::morse;
-use ice::xor;
+use ice::{base, caesar, general, manipulation, morse, xor};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -60,7 +55,7 @@ fn main() {
         _ => String::from("Subcommand not found!"),
     };
 
-    println!("Result\n======\n{}", res);
+    println!("Result\n======\n{}", res.trim());
 }
 
 // COMPLETED:

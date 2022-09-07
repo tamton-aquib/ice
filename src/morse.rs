@@ -69,9 +69,9 @@ pub fn morse_encode(s: &str) -> String {
             '$' => "..._.._ ",
             '@' => ".__._. ",
             ' ' => "/",
-            _ => "<undefined> ",
+            _ => "<undefined>"
         })
-        .collect::<String>()
+        .collect()
 }
 
 /// Morse decoding.
@@ -139,5 +139,5 @@ pub fn morse_decode(s: &str) -> String {
             "/" => ' ',
             _ => '?',
         })
-        .collect::<String>()
+        .collect()
 }
