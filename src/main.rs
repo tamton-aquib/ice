@@ -54,8 +54,8 @@ fn main() {
 
         // Manipulation commands
         "lower" => manipulation::lower(query),
-        "upper" => manipulation::lower(query),
-        "remove_whitespace" | "rw" => manipulation::lower(query),
+        "upper" => manipulation::upper(query),
+        "remove_whitespace" | "rw" => manipulation::remove_whitespace(query),
 
         // General
         "a1z26" | "az" => general::a1z26(query),

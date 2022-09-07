@@ -7,9 +7,9 @@ pub struct Cracker {
 }
 
 impl Cracker {
-    pub fn new(query: &str) -> Self {
+    pub fn new(s: &str) -> Self {
         Self {
-            query: query.to_string(),
+            query: s.to_string(),
             result: String::new(),
         }
     }
@@ -29,8 +29,8 @@ impl Cracker {
 /// Crack hashes using the dehash api.
 /// Returns a `Result`
 /// * `query`: &str (query string)
-pub async fn start_cracker(query: &str) -> Result<String> {
-    let res = Cracker::new(query).get().await?;
+pub async fn start_cracker(s: &str) -> Result<String> {
+    let res = Cracker::new(s).get().await?;
 
     let nice = if res.result.find(':') != None {
         res.result.split(':').last().unwrap().to_string()

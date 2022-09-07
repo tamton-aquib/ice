@@ -56,6 +56,7 @@ mod tests {
 
     #[test]
     fn check_general() {
-        assert_eq!(general::a1z26("14-9-3-5"), "nice")
+        assert_eq!(general::a1z26("14-9-3-5"), "nice");
+        assert_eq!(general::atbash("nice"), "mrxv")
     }
 }

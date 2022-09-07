@@ -1,9 +1,9 @@
 pub fn lower(s: &str) -> String {
-    return s.to_lowercase().to_string();
+    s.to_lowercase()
 }
 
 pub fn upper(s: &str) -> String {
-    return s.to_uppercase().to_string();
+    s.to_uppercase()
 }
 
 pub fn remove_whitespace(s: &str) -> String {

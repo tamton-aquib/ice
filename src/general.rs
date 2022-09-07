@@ -1,7 +1,20 @@
 // TODO: mostly sub ciphers.
+const ALPHABETS: &str = "abcdefghijklmnopqrstuvwxyz";
+
+// TODO: cleanup maybe
+pub fn atbash(s: &str) -> String {
+    s.chars()
+        .map(|c| {
+            let idx = ALPHABETS.find(c).unwrap_or(27);
+            match ALPHABETS.chars().rev().nth(idx) {
+                Some(v) => v,
+                None => ' ',
+            }
+        })
+        .collect()
+}
 
 pub fn a1z26(s: &str) -> String {
-    const ALPHABETS: &str = "abcdefghijklmnopqrstuvwxyz";
     s.replace("-", " ")
         .split_whitespace()
         .map(|num| {
@@ -12,7 +25,3 @@ pub fn a1z26(s: &str) -> String {
         })
         .collect()
 }
-
-// pub fn substitution(s: String, key: char) -> String {
-// s.chars();
-// }

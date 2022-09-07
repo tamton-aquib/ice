@@ -10,11 +10,11 @@ version: 0.0.13
 *  PLANNED TODO
 **  General
     - [x] a1z26
-    - [ ] railfence
-    - [ ] bacon
+    - [-] atbash
+    - [=] railfence (unfixed keys)
+    - [=] bacon (uv/ij ambiguity)
     - [ ] bifid
     - [ ] affine
-    - [ ] atbash
     - [ ] substitution
     - [=] hasher using dehash api -> temp not working.
     - [ ] url encode/decode
@@ -33,9 +33,9 @@ version: 0.0.13
     - [ ] score system
 
 **  XOR
-    - [-] single byte
-    - [-] hex to hex
-    - [-] string to string
+    - [-] single byte (sxb)
+    - [-] hex to hex (hxh)
+    - [-] string to string (sxs)
 
 **  BASE
     - [x] base02 (binary)
@@ -65,5 +65,7 @@ version: 0.0.13
    - [ ] Reduce the number of unwraps.
    - [ ] Automatic result finding.
    - [ ] identification by similarity.
+   - [ ] annotating each module.
+   - [ ] add colors to output.
    - [ ] add aliases for each subcommand.
 

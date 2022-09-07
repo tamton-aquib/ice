@@ -1,9 +1,8 @@
 /// Classic rot13.
 /// Returns a single `String`.
 /// * `query`: &str (query string)
-pub fn rot13(query: &str) -> String {
-    query
-        .chars()
+pub fn rot13(s: &str) -> String {
+    s.chars()
         .map(|c| match c {
             'a'..='m' | 'A'..='M' => ((c as u8) + 13) as char,
             'n'..='z' | 'N'..='Z' => ((c as u8) - 13) as char,
@@ -14,10 +13,10 @@ pub fn rot13(query: &str) -> String {
 
 /// Caesar cipher for 0-25(a-z)
 /// * `query`: &str (query string)
-pub fn caesar(query: &str) -> String {
+pub fn caesar(s: &str) -> String {
     (0..26)
         .map(|i| {
-            let result = query.chars().map(|c| match c {
+            let result = s.chars().map(|c| match c {
                 'a'..='z' => (((c as u8 - 97 + i) % 26) + 97) as char,
                 'A'..='Z' => (((c as u8 - 65 + i) % 26) + 65) as char,
                 _ => c,
