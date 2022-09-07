@@ -4,10 +4,6 @@ use ice::general;
 use ice::manipulation;
 use ice::morse;
 use ice::xor;
-// TODO: add colors
-// TODO: complete xor.rs
-// TODO: start general.rs
-// TODO: complete caesar::vigenere()
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -59,6 +55,7 @@ fn main() {
 
         // General
         "a1z26" | "az" => general::a1z26(query),
+        "atbash" => general::atbash(query),
 
         _ => String::from("Subcommand not found!"),
     };

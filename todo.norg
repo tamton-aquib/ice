@@ -68,4 +68,5 @@ version: 0.0.13
    - [ ] annotating each module.
    - [ ] add colors to output.
    - [ ] add aliases for each subcommand.
+   - [ ] read from stdin.
 

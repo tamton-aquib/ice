@@ -7,5 +7,3 @@ edition = "2021"
 hex = "0.4.3"
 base64 = "0.13.0"
 base32 = "0.4.0"
-# clap = { version="3.2", features=["derive"] }
-serde = { version = "1.0", features = ["derive"] }
