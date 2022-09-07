@@ -1,32 +1,13 @@
-# CTF Utils (CTFU)
-These are some utilities when playing ctfs. <br/>
-Will be changed to a fully functioning binary later.
+# Ice
+A command line utility to help with simple stuff in CTFs. <br />
+Extracted from [graveyard](https://github.com/tamton-aquib/graveyard)
 
-### NOTES:
-- morse uses `_` as dash instead of `-` as of now.
+### Includes
+- Caesar ciphers: simple rots, rot13, vigenere, etc
+- General ciphers: a1z23, atbash, etc
+- Xor: single byte, string vs string, hex vs hex, etc. (wip)
+- Base: binary, octal, hex, base32, base64
+- check [todo.norg](https://github.com/tamton-aquib/ice/blob/main/todo.norg) for the full list working on.
 
 ### Todo:
-- [ ] substitution
-- [x] ~hasher using dehash api~ -> temp not working.
-- [ ] Caesar
-    - [x] ~simple caesar~
-    - [x] ~rot~
-    - [ ] vigenere
-- [ ] XOR
-    - [ ] single byte
-    - [ ] hex to hex
-    - [ ] string to string
-- [ ] BASE
-    - [x] ~2: binary~
-    - [x] ~8: octal~
-    - [x] ~16: hex~
-    - [x] ~base32~
-    - [x] ~base64~
-- [ ] Advanced stuff (maybe wont do this)
-    - [ ] ECB and CBC
-    - [ ] RSA
-
-- [ ] scoring methods for efficiency.
-- [ ] write tests for each mod.
-- [ ] Reduce the number of unwraps.
-- [ ] Automatic result finding.
+moved to [todo.norg](https://github.com/tamton-aquib/ice/blob/main/todo.norg)
