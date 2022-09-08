@@ -69,7 +69,7 @@ pub fn morse_encode(s: &str) -> String {
             '$' => "..._.._ ",
             '@' => ".__._. ",
             ' ' => "/",
-            _ => "<undefined>"
+            _ => panic!("Character: {} cant be encoded!", c),
         })
         .collect()
 }
