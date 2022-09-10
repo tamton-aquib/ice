@@ -1,6 +1,4 @@
-use base32;
-use base64;
-use hex;
+use crate::utils;
 
 pub fn b64(s: &str) -> String {
     match base64::decode(s) {
@@ -21,7 +19,7 @@ pub fn b32(s: &str) -> String {
 }
 
 pub fn hexadecimal(s: &str) -> String {
-    if s.chars().all(|x| "0123456789abcdef".contains(x)) {
+    if utils::is_hex_repr(s) {
         String::from_utf8(hex::decode(s).unwrap()).unwrap()
     } else {
         s.chars()

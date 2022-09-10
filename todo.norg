@@ -33,7 +33,7 @@ version: 0.0.13
     - [ ] score system
 
 **  XOR
-    - [-] single byte (sxb)
+    - [x] single byte (sxb)
     - [-] hex to hex (hxh)
     - [-] string to string (sxs)
 
@@ -70,4 +70,5 @@ version: 0.0.13
    - [ ] add aliases for each subcommand.
    - [ ] read from stdin.
    - [ ] sanitize inputs for extra characters.
+   - [ ] local man page(help page).
 

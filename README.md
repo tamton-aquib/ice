@@ -2,6 +2,8 @@
 [Ice](https://gameofthrones.fandom.com/wiki/Ice) is a lightweight command line utility to help with simple problems encountered while playing CTFs. <br />
 Extracted from [graveyard](https://github.com/tamton-aquib/graveyard)
 
+NOTE: Most of the functions can autodetect if its encode or decode.
+
 ---
 
 ### Includes
@@ -18,6 +20,12 @@ Extracted from [graveyard](https://github.com/tamton-aquib/graveyard)
 ```bash
 cargo install --git https://github.com/tamton-aquib/ice.git
 ```
+
+#### From releases
+- Go to [releases](https://github.com/tamton-aquib/ice/releases/) and download the appropriate file.
+- extract the archive and you get a binary.
+- `chmod +x ice` to make it executable.
+- move it to one of the PATHS (usually ~/.local/bin/)
 
 ---
 
