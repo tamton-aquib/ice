@@ -11,14 +11,16 @@ fn main() {
         return;
     }
 
-    let c_type = &args[1];
+    let subcommand = &args[1];
     let query = &args[2].trim();
+    // let subcommand = "sxb";
+    // let query = "";
 
-    let res = match c_type.trim() {
+    let res = match subcommand.trim() {
         // Caesar commands
-        "caesar" | "ceasar" => caesar::caesar(query),
+        "caesar" | "ceasar" | "c" => caesar::caesar(query),
         "rot13" | "rot" => caesar::rot13(query),
-        "vigenere" => {
+        "vigenere" | "vig" => {
             if &args.len() >= &4 {
                 caesar::vigenere(query, &args[3])
             } else {
@@ -40,7 +42,7 @@ fn main() {
         "b64" => base::b64(query),
         "b32" => base::b32(query),
         "octal" | "oct" => base::octal(query),
-        "hex" | "b16" => base::hexadecimal(query),
+        "hex" | "hexa" | "b16" => base::hexadecimal(query),
         "binary" | "bin" => base::binary(query),
 
         // Manipulation commands
@@ -62,4 +64,4 @@ fn main() {
 // 1. caesar.rs: rot13, caesar, vigenere
 // 2. morse.rs: morse_encode, morse_decode
 // 3. xor.rs: str, hex, byte, etc
-// 4. base.rs: b64, b32, octal, hexadecimal
+// 4. base.rs: b2,b8,b16,b32,b64

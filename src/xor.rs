@@ -1,19 +1,28 @@
 // TODO: maybe add a scoring system to efficiently get correct ones.
 // This is kinda complicated (diff inputs + diff output formats)
 
-/// XOR between a string and another string.
-/// Works on strings or bytes, returns `String`.
-/// * `a`: &str (first string)
-/// * `b`: &str (second string)
-pub fn str_x_str(a: &str, b: &str) -> String {
-    if b > a {
-        let (_a, _b) = (b, a);
-    }
+pub fn hex_x_hex(a: &str, b: &str) -> String {
+    // let a_decoded = a.bytes();
+    // let b_decoded = b.bytes();
+    let a_decoded = hex::decode(a);
+    let b_decoded = hex::decode(b);
 
-    a.chars()
-        .zip(b.chars().cycle())
-        .map(|(i, j)| ((i as u8) ^ (j as u8)) as char)
-        .collect()
+    let bruh = a_decoded
+        .iter()
+        .zip(b_decoded.iter())
+        .map(|(x1, x2)| x1 ^ x2)
+        .collect::<Vec<u8>>();
+    hex::encode(bruh)
+    // hex::encode(bruh)
+}
+
+pub fn str_x_str(a: &str, b: &str) -> String {
+    hex::encode(
+        a.chars()
+            .zip(b.chars().cycle())
+            .map(|(i, j)| ((i as u8) ^ (j as u8)) as char)
+            .collect::<String>(),
+    )
 }
 
 // This is the only func here that returns ascii strings
@@ -31,12 +40,4 @@ pub fn str_x_byte(s: &str) -> String {
         })
         .filter(|i| i.is_ascii())
         .collect()
-}
-// TODO: to be completed!
-/// XOR between 2 hex strings.
-/// Decodes and performs str_x_str.
-/// * `a`: &str(hex)
-/// * `b`: &str(hex)
-pub fn hex_x_hex(_a: &str, _b: &str) -> String {
-    unimplemented!();
 }

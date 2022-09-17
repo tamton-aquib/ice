@@ -5,8 +5,10 @@ pub mod manipulation;
 pub mod morse;
 pub mod xor;
 // pub mod hasher;
+pub mod utils;
 
 // TODO: add test cases for each module.
+// TODO: add better corner cases for each function.
 
 #[cfg(test)]
 mod tests {
@@ -54,9 +56,23 @@ mod tests {
         );
     }
 
+    // general.rs
     #[test]
     fn check_general() {
         assert_eq!(general::a1z26("14-9-3-5"), "nice");
         assert_eq!(general::atbash("nice"), "mrxv")
+    }
+
+    //xor.rs
+    #[test]
+    fn check_xor() {
+        assert!(xor::str_x_byte(
+            "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+        )
+        .contains("Cooking MC's like a pound of bacon"));
+        assert_eq!(
+            xor::hex_x_hex("6578616d706c6520737472696e67", "6e696365"),
+            "0b110208"
+        )
     }
 }

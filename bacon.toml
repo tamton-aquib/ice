@@ -1,0 +1,26 @@
+# This is a configuration file for the bacon tool
+# More info at https://github.com/Canop/bacon
+
+default_job = "run"
+
+[jobs]
+
+# You can run your application and have the result displayed in bacon,
+# *if* it makes sense for this crate. You can run an example the same
+# way. Don't forget the `--color always` part or the errors won't be
+# properly parsed.
+[jobs.run]
+command = ["cargo", "run", "hxh", "6578616d706c6520737472696e67", "6e696365", "--color", "always"]
+need_stdout = true
+
+# You may define here keybindings that would be specific to
+# a project, for example a shortcut to launch a specific job.
+# Shortcuts to internal functions (scrolling, toggling, etc.)
+# should go in your personal prefs.toml file instead.
+[keybindings]
+a = "job:check-all"
+i = "job:initial"
+c = "job:clippy"
+d = "job:doc-open"
+t = "job:test"
+r = "job:run"
