@@ -1,21 +1,19 @@
 // TODO: maybe add a scoring system to efficiently get correct ones.
 // This is kinda complicated (diff inputs + diff output formats)
 
+// TODO: does not work
 pub fn hex_x_hex(a: &str, b: &str) -> String {
-    // let a_decoded = a.bytes();
-    // let b_decoded = b.bytes();
-    let a_decoded = hex::decode(a);
-    let b_decoded = hex::decode(b);
+    let a_decoded = a.bytes();
+    let b_decoded = b.bytes();
 
     let bruh = a_decoded
-        .iter()
-        .zip(b_decoded.iter())
-        .map(|(x1, x2)| x1 ^ x2)
-        .collect::<Vec<u8>>();
+        .zip(b_decoded)
+        .map(|(x1, x2)| (x1 ^ x2) as char)
+        .collect::<String>();
     hex::encode(bruh)
-    // hex::encode(bruh)
 }
 
+// TODO: make hxh work to make this work.
 pub fn str_x_str(a: &str, b: &str) -> String {
     hex::encode(
         a.chars()

@@ -1,4 +1,4 @@
-use ice::{base, caesar, general, manipulation, morse, xor};
+use ice::{analyze, base, caesar, general, manipulation, morse, xor};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -53,6 +53,9 @@ fn main() {
         // General
         "a1z26" | "az" => general::a1z26(query),
         "atbash" => general::atbash(query),
+
+        // Analyzer
+        // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),
 
         _ => String::from("Subcommand not found!"),
     };

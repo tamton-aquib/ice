@@ -10,7 +10,7 @@ default_job = "run"
 # way. Don't forget the `--color always` part or the errors won't be
 # properly parsed.
 [jobs.run]
-command = ["cargo", "run", "hxh", "6578616d706c6520737472696e67", "6e696365", "--color", "always"]
+command = ["cargo", "run", "rb", "target/debug/ice", "alphabets", "--color", "always"]
 need_stdout = true
 
 # You may define here keybindings that would be specific to
