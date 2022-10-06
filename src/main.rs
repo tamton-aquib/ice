@@ -53,10 +53,10 @@ fn main() {
         // General
         "a1z26" | "az" => general::a1z26(query),
         "atbash" => general::atbash(query),
+        "ascii" => general::ascii(query),
 
         // Analyzer
         // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),
-
         _ => String::from("Subcommand not found!"),
     };
 

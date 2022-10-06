@@ -14,6 +14,16 @@ pub fn atbash(s: &str) -> String {
         .collect()
 }
 
+pub fn ascii(s: &str) -> String {
+    if s.chars().all(|x| "0123456789 ".contains(x)) {
+        s.split_whitespace()
+            .map(|n| n.parse::<u8>().expect("Failed when parsing to range 0-255") as char)
+            .collect()
+    } else {
+        s.chars().map(|i| format!("{}", i as u8)).collect()
+    }
+}
+
 pub fn a1z26(s: &str) -> String {
     s.replace("-", " ")
         .split_whitespace()
