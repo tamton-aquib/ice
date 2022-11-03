@@ -11,10 +11,10 @@ version: 0.0.13
 **  General
     - [x] a1z26
     - [-] atbash
+    - [x] ascii
     - [=] railfence (unfixed keys)
     - [=] bacon (uv/ij ambiguity)
-    - [ ] bifid
-    - [ ] affine
+    - [ ] affine, bifid
     - [ ] substitution
     - [=] hasher using dehash api -> temp not working.
     - [ ] url encode/decode
@@ -29,7 +29,7 @@ version: 0.0.13
     - [x] caesar
     - [x] rot13
     - [ ] rot47
-    - [ ] vigenere
+    - [x] vigenere
     - [ ] score system
 
 **  XOR
@@ -71,4 +71,5 @@ version: 0.0.13
    - [ ] read from stdin.
    - [ ] sanitize inputs for extra characters.
    - [ ] local man page(help page).
+   - [ ] edge cases + cleanify (capital + small)
 

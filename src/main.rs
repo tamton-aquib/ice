@@ -1,4 +1,4 @@
-use ice::{analyze, base, caesar, general, manipulation, morse, xor};
+use ice::{base, caesar, general, manipulation, morse, xor};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();

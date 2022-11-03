@@ -5,8 +5,8 @@ pub mod manipulation;
 pub mod morse;
 pub mod xor;
 // pub mod hasher;
-pub mod analyze;
-pub mod extract;
+// pub mod analyze;
+// pub mod extract;
 pub mod utils;
 
 // TODO: add test cases for each module.

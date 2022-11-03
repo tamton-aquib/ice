@@ -27,14 +27,32 @@ pub fn caesar(s: &str) -> String {
         .collect()
 }
 
-// TODO: to be completed!
+// NOTE: taken from https://github.com/TheAlgorithms/Rust
 /// Vigenere cipher encrypt.
 /// Returns encrypted string.
 /// * `s`: &str (query string)
 /// * `key`: &str (key to encrypt)
 pub fn vigenere(s: &str, key: &str) -> String {
+    let key = key
+        .chars()
+        .filter(|&c| c.is_ascii_alphabetic())
+        .collect::<String>()
+        .to_ascii_lowercase();
+
+    let key_len = key.len();
+    let mut index = 0;
+
     s.chars()
-        .zip(key.chars().cycle())
-        .map(|(x, y)| (((x as u8) + (y as u8)) % 26) as char)
+        .map(|c| {
+            if c.is_ascii_alphabetic() {
+                let first = if c.is_ascii_lowercase() { b'a' } else { b'A' };
+                let shift = key.as_bytes()[index % key_len] - b'a';
+                index += 1;
+
+                (first + (c as u8 + shift - first) % 26) as char
+            } else {
+                c
+            }
+        })
         .collect()
 }
