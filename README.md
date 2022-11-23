@@ -19,7 +19,7 @@ NOTE: Most of the functions can autodetect if its encode or decode.
 
 ##### From AUR
 ```sh
-yay -S veldora
+yay -S ice-bin
 ```
 
 ##### From source (if rust is installed in your system)
