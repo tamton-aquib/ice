@@ -16,6 +16,12 @@ NOTE: Most of the functions can autodetect if its encode or decode.
 ---
 
 ### Installation
+
+##### From AUR
+```sh
+yay -S veldora
+```
+
 ##### From source (if rust is installed in your system)
 ```bash
 cargo install --git https://github.com/tamton-aquib/ice.git
