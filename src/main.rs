@@ -1,20 +1,25 @@
 use ice::{base, caesar, general, manipulation, morse, xor};
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
+    let mut args: Vec<String> = std::env::args().collect();
     if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) {
         println!("Ice - A simple ctf tool store.");
         return;
     }
+
+    if !atty::is(atty::Stream::Stdin) {
+        let mut extrargs: Vec<String> = std::io::stdin().lines().map(|i| i.unwrap()).collect();
+        args.append(&mut extrargs);
+    }
+
     if args.len() <= 2 {
-        println!("Please provide an argument!");
+        println!("Please provide the subcommand and/or query!");
+        println!("Example: ice b64 bmljZQ==");
         return;
     }
 
     let subcommand = &args[1];
     let query = &args[2].trim();
-    // let subcommand = "sxb";
-    // let query = "";
 
     let res = match subcommand.trim() {
         // Caesar commands
@@ -60,7 +65,7 @@ fn main() {
         _ => String::from("Subcommand not found!"),
     };
 
-    println!("Result\n======\n{}", res.trim());
+    println!("{}", res.trim());
 }
 
 // COMPLETED:
