@@ -3,14 +3,16 @@
 
 // TODO: does not work
 pub fn hex_x_hex(a: &str, b: &str) -> String {
-    let a_decoded = a.bytes();
-    let b_decoded = b.bytes();
+    let a_decoded = hex::decode(a).expect("first argument is not a valid hex!");
+    let b_decoded = hex::decode(b).expect("second argument is not a valid hex!");
 
-    let bruh = a_decoded
-        .zip(b_decoded)
-        .map(|(x1, x2)| (x1 ^ x2) as char)
-        .collect::<String>();
-    hex::encode(bruh)
+    hex::encode(
+        a_decoded
+            .iter()
+            .zip(b_decoded.iter().cycle())
+            .map(|(x1, x2)| (x1 ^ x2) as char)
+            .collect::<String>(),
+    )
 }
 
 // TODO: make hxh work to make this work.
@@ -23,8 +25,12 @@ pub fn str_x_str(a: &str, b: &str) -> String {
     )
 }
 
-// This is the only func here that returns ascii strings
+// HACK: Shouldve called the other way around!
 pub fn str_x_byte(s: &str) -> String {
+    hex_x_byte(&hex::encode(s))
+}
+
+pub fn hex_x_byte(s: &str) -> String {
     (0..=255)
         .map(|i| {
             format!(
@@ -36,6 +42,6 @@ pub fn str_x_byte(s: &str) -> String {
                     .collect::<String>(),
             )
         })
-        .filter(|i| i.is_ascii())
+        .filter(|i| i.is_ascii() && !i.trim().is_empty())
         .collect()
 }

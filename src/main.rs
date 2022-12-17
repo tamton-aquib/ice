@@ -1,9 +1,15 @@
 use ice::{base, caesar, general, manipulation, morse, xor};
 
+const HELP: &str = r#"
+Ice - A simple ctf tool store.
+
+Usage   : ice [subcommand] [query] [OPTIONAL-QUERIES]
+Example : ice b64 bmljZQ=="#;
+
 fn main() {
     let mut args: Vec<String> = std::env::args().collect();
-    if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) {
-        println!("Ice - A simple ctf tool store.");
+    if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) || args.len() == 1 {
+        println!("{HELP}");
         return;
     }
 
@@ -42,6 +48,7 @@ fn main() {
         "hxh" => xor::hex_x_hex(&args[2], &args[3]),
         "sxs" => xor::str_x_str(&args[2], &args[3]),
         "sxb" | "bxs" => xor::str_x_byte(&args[2]),
+        "hxb" | "bxh" => xor::hex_x_byte(&args[2]),
 
         // Base commands
         "b64" => base::b64(query),

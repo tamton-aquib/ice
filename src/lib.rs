@@ -68,13 +68,17 @@ mod tests {
     //xor.rs
     #[test]
     fn check_xor() {
-        assert!(xor::str_x_byte(
+        assert!(xor::hex_x_byte(
             "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
         )
         .contains("Cooking MC's like a pound of bacon"));
         assert_eq!(
             xor::hex_x_hex("6578616d706c6520737472696e67", "6e696365"),
-            "0b110208"
-        )
+            "0b1102081e0506451d1d110c000e"
+        );
+        // assert_eq!(
+        // xor::str_x_byte("example string"),
+        // "0b1102081e0506451d1d110c000e"
+        // );
     }
 }
