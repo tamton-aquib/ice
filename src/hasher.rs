@@ -40,4 +40,3 @@ pub async fn start_cracker(s: &str) -> Result<String> {
 
     Ok(nice)
 }
-

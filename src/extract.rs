@@ -2,37 +2,41 @@ use regex::Regex;
 use std::{fs, path::Path};
 
 struct Extractor {
-    contents: Vec<String>,
-    matches: Vec<String>,
-    filename: String,
-}
-
-pub fn read_contents(filename: &Path) -> String {
-    fs::read_to_string(filename).expect("Error reading file!")
+    contents: String,
 }
 
 impl Extractor {
-    fn new() -> Self {
+    fn new(filename: &str) -> Self {
+        let filepath = Path::new(filename);
         Self {
-            contents: Vec::new(),
-            matches: Vec::new(),
-            filename: String::new(),
+            contents: fs::read_to_string(filepath).unwrap(),
         }
     }
 
-    fn email(&self) -> Vec<String> {
-        fs::read_to_string(self.filename)
-            .expect("Error reading file!")
-            .lines()
-            .filter(|l| {
-                let re = Regex::new(r#"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"#).unwrap();
-                re.is_match(l)
-            })
+    fn emails(&self) -> Vec<String> {
+        Regex::new(r"[a-z0-9_+][a-z0-9_+.]*[a-z0-9_+]?@[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}")
+            .unwrap()
+            .captures_iter(&self.contents)
+            .map(|i| i[0].to_string())
+            .collect()
+    }
+
+    fn phones(&self) -> Vec<String> {
+        Regex::new(r"[\.\-)( ]*([0-9]{3})[\.\-)( ]*([0-9]{3})[\.\-)( ]*([0-9]{4})")
+            .unwrap()
+            .captures_iter(&self.contents)
+            .map(|i| i[0].to_string())
             .collect()
     }
 }
 
-pub fn extractor(filename: &str) {
-    let x = Extractor::new();
-    read_contents(Path::new(filename));
+pub fn extractor(xtype: &str, filename: &str) -> String {
+    let extract = Extractor::new(filename);
+    let matches = match xtype {
+        "email" | "emails" | "e" | "mails" | "mail" => extract.emails(),
+        "phone" | "mobile" | "phones" | "numbers" => extract.phones(),
+        _ => todo!(),
+    };
+
+    matches.join("\n")
 }

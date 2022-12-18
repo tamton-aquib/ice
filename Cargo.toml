@@ -2,6 +2,7 @@
 name = "ice"
 version = "0.0.1"
 edition = "2021"
+authors = ["tamton-aquib <aquibjavedt007@gmail.com>"]
 
 [dependencies]
 hex = "0.4.3"

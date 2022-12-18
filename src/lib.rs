@@ -6,7 +6,7 @@ pub mod morse;
 pub mod xor;
 // pub mod hasher;
 // pub mod analyze;
-// pub mod extract;
+pub mod extract;
 pub mod utils;
 
 // TODO: add test cases for each module.
@@ -76,9 +76,11 @@ mod tests {
             xor::hex_x_hex("6578616d706c6520737472696e67", "6e696365"),
             "0b1102081e0506451d1d110c000e"
         );
-        // assert_eq!(
-        // xor::str_x_byte("example string"),
-        // "0b1102081e0506451d1d110c000e"
-        // );
+    }
+
+    #[test]
+    fn check_extractor() {
+        assert!(extract::extractor("email", "Cargo.toml").contains("aquibjavedt007@gmail.com"));
+        assert!(extract::extractor("phone", "todo.norg").contains("9388884586"));
     }
 }

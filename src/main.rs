@@ -1,4 +1,4 @@
-use ice::{base, caesar, general, manipulation, morse, xor};
+use ice::{base, caesar, extract, general, manipulation, morse, xor};
 
 const HELP: &str = r#"
 Ice - A simple ctf tool store.
@@ -66,6 +66,9 @@ fn main() {
         "a1z26" | "az" => general::a1z26(query),
         "atbash" => general::atbash(query),
         "ascii" => general::ascii(query),
+
+        //Extractor
+        "extract" => extract::extractor(query, &args[3]),
 
         // Analyzer
         // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),

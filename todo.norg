@@ -49,7 +49,8 @@ version: 0.0.13
     - [ ] base85
 
 ** Extarctors (extract from string)
-   - [ ] ip, email, mac, date formats, etc
+   - [x] phone, email  +test strings: aquibjavedt007@gmail.com, 9388884586+
+   - [ ] ip, mac, date formats, etc
    - [ ] exif metadata.
    - [ ] extract from binary flag format
    - [ ] magic bytes
@@ -73,3 +74,5 @@ version: 0.0.13
    - [ ] local man page(help page).
    - [ ] edge cases + cleanify (capital + small)
 
+#comment
+   norg file format: [nvim-neorg]{https://github.com/nvim-neorg/neorg}
