@@ -82,5 +82,6 @@ mod tests {
     fn check_extractor() {
         assert!(extract::extractor("email", "Cargo.toml").contains("aquibjavedt007@gmail.com"));
         assert!(extract::extractor("phone", "todo.norg").contains("9388884586"));
+        assert!(extract::extractor("ip", "todo.norg").contains("1.1.1.1"));
     }
 }

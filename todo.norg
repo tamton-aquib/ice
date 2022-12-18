@@ -49,11 +49,11 @@ version: 0.0.13
     - [ ] base85
 
 ** Extarctors (extract from string)
-   - [x] phone, email  +test strings: aquibjavedt007@gmail.com, 9388884586+
-   - [ ] ip, mac, date formats, etc
+   - [x] phone, email, ip  +test strings: aquibjavedt007@gmail.com, 9388884586+
+   - [ ] mac, date formats, etc +192.168.1.1  1.1.1.1 255.255.255.0+
    - [ ] exif metadata.
-   - [ ] extract from binary flag format
-   - [ ] magic bytes
+   - [ ] extract flag format from a binary file.
+   - [ ] magic bytes.
 
 **  Advanced
     - [ ] Advanced stuff (maybe wont do this)

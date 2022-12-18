@@ -68,7 +68,9 @@ fn main() {
         "ascii" => general::ascii(query),
 
         //Extractor
-        "extract" => extract::extractor(query, &args[3]),
+        "email" | "emails" | "mails" | "mail" => extract::extractor("email", query),
+        "phone" | "phones" | "mobile" | "number" => extract::extractor("phone", query),
+        "ipv4" | "ip" | "ips" => extract::extractor("ip", query),
 
         // Analyzer
         // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),

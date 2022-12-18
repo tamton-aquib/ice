@@ -28,13 +28,22 @@ impl Extractor {
             .map(|i| i[0].to_string())
             .collect()
     }
+
+    fn ips(&self) -> Vec<String> {
+        Regex::new(r"((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}")
+            .unwrap()
+            .captures_iter(&self.contents)
+            .map(|i| i[0].to_string())
+            .collect()
+    }
 }
 
 pub fn extractor(xtype: &str, filename: &str) -> String {
     let extract = Extractor::new(filename);
     let matches = match xtype {
-        "email" | "emails" | "e" | "mails" | "mail" => extract.emails(),
-        "phone" | "mobile" | "phones" | "numbers" => extract.phones(),
+        "email" => extract.emails(),
+        "phone" => extract.phones(),
+        "ip" => extract.ips(),
         _ => todo!(),
     };
 
