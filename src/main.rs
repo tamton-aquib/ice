@@ -1,15 +1,24 @@
 use ice::{base, caesar, extract, general, manipulation, morse, xor};
+const VERSION: &str = "0.0.2";
 
-const HELP: &str = r#"
-Ice - A simple ctf tool store.
-
-Usage   : ice [subcommand] [query] [OPTIONAL-QUERIES]
-Example : ice b64 bmljZQ=="#;
+// const HELP: &str = r#"
 
 fn main() {
     let mut args: Vec<String> = std::env::args().collect();
-    if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) || args.len() == 1 {
-        println!("{HELP}");
+
+    if ["-h", "-V", "--help", "--version"]
+        .iter()
+        .any(|f| args.contains(&f.to_string()))
+        || args.len() == 1
+    {
+        println!(
+            "
+Ice - A simple ctf tool store.
+version: {VERSION}
+
+Usage   : ice [subcommand] [query] [OPTIONAL-QUERIES]
+Example : ice b64 bmljZQ=="
+        );
         return;
     }
 
@@ -79,9 +88,3 @@ fn main() {
 
     println!("{}", res.trim());
 }
-
-// COMPLETED:
-// 1. caesar.rs: rot13, caesar, vigenere
-// 2. morse.rs: morse_encode, morse_decode
-// 3. xor.rs: str, hex, byte, etc
-// 4. base.rs: b2,b8,b16,b32,b64
