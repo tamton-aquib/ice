@@ -35,5 +35,17 @@ cargo install --git https://github.com/tamton-aquib/ice.git
 
 ---
 
+### Usage examples
+```bash
+ice b64 "example string"        # encodes the string
+ice b64 ZXhhbXBsZSBzdHJpbmc=    # decodes the string (autodetect)
+
+ice morse "example"
+ice morse ". _.._ ._ __ .__. ._.. ."  # autodetect
+
+# ... and the other 20 subcommands: checkout src/main.rs
+```
+
+
 ### Todo:
 moved to [todo.norg](https://github.com/tamton-aquib/ice/blob/main/todo.norg)
