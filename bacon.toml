@@ -10,7 +10,7 @@ default_job = "run"
 # way. Don't forget the `--color always` part or the errors won't be
 # properly parsed.
 [jobs.run]
-command = ["cargo", "run", "ip", "todo.norg", "--color", "always"]
+command = ["cargo", "run", "railfence", "atc toctaka ne", "--color", "always"]
 need_stdout = true
 
 # You may define here keybindings that would be specific to

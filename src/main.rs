@@ -75,6 +75,8 @@ Example : ice b64 bmljZQ=="
         "a1z26" | "az" => general::a1z26(query),
         "atbash" => general::atbash(query),
         "ascii" => general::ascii(query),
+        "bacon" => general::bacon(query),
+        "railfence" => general::railfence(query),
 
         //Extractor
         "email" | "emails" | "mails" | "mail" => extract::extractor("email", query),

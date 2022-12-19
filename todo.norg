@@ -13,17 +13,17 @@ version: 0.0.13
     - [-] atbash
     - [x] ascii
     - [=] railfence (unfixed keys)
-    - [=] bacon (uv/ij ambiguity)
+    - [x] bacon (uv/ij ambiguity)
     - [ ] affine, bifid
     - [ ] substitution
     - [=] hasher using dehash api -> temp not working.
-    - [ ] url encode/decode
 
 **  Basic manipulation
     - [x] upper, lower
     - [x] remove whitespace
     - [ ] sort, uniq, filter
     - [ ] remove line numbers or recurring patterns
+    - [ ] url encode/decode
 
 **  Caesar
     - [x] caesar

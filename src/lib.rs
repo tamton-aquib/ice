@@ -62,7 +62,12 @@ mod tests {
     #[test]
     fn check_general() {
         assert_eq!(general::a1z26("14-9-3-5"), "nice");
-        assert_eq!(general::atbash("nice"), "mrxv")
+        assert_eq!(general::atbash("nice"), "mrxv");
+        assert_eq!(general::ascii("65 65"), "AA");
+        assert!(
+            general::bacon("AAABB AAABA ABBAB AAABB AABAA AAAAB AAAAA AAABA ABBAB ABBAA")
+                .contains("dcodebacon")
+        );
     }
 
     //xor.rs

@@ -1,5 +1,61 @@
 // TODO: mostly sub ciphers.
 const ALPHABETS: &str = "abcdefghijklmnopqrstuvwxyz";
+const ALT_PHABETS: &str = "abcdefghiklmnopqrstuwxyz";
+
+pub fn railfence(s: &str) -> String {
+    "noice".to_owned()
+}
+
+// TODO: Cleanify
+pub fn bacon(s: &str) -> String {
+    let take1 = [
+        "aaaaa", "aaaab", "aaaba", "aaabb", "aabaa", "aabab", "aabba", "aabbb", "abaaa", "abaab",
+        "ababa", "ababb", "abbaa", "abbab", "abbba", "abbbb", "baaaa", "baaab", "baaba", "baabb",
+        "babaa", "babab", "babba", "babbb",
+    ];
+
+    let take2 = [
+        "aaaaa", "aaaab", "aaaba", "aaabb", "aabaa", "aabab", "aabba", "aabbb", "abaaa", "abaab",
+        "ababa", "ababb", "abbaa", "abbab", "abbba", "abbbb", "baaaa", "baaab", "baaba", "baabb",
+        "babaa", "babab", "babba", "babbb", "bbaaa", "bbaab",
+    ];
+
+    let string = s.to_lowercase().replace("0", "a").replace("1", "b");
+    let str_take1: String = string
+        .split_whitespace()
+        .map(|word| {
+            word.chars()
+                .collect::<Vec<char>>()
+                .chunks(5)
+                .map(|c| {
+                    let idx = take1
+                        .iter()
+                        .position(|&i| i == String::from_iter(c))
+                        .unwrap();
+                    ALPHABETS.chars().nth(idx).unwrap()
+                })
+                .collect::<String>()
+        })
+        .collect();
+    let str_take2: String = string
+        .split_whitespace()
+        .map(|word| {
+            word.chars()
+                .collect::<Vec<char>>()
+                .chunks(5)
+                .map(|c| {
+                    let idx = take2
+                        .iter()
+                        .position(|&i| i == String::from_iter(c))
+                        .unwrap();
+                    ALT_PHABETS.chars().nth(idx).unwrap()
+                })
+                .collect::<String>()
+        })
+        .collect();
+
+    format!("{}\n{}", str_take1, str_take2)
+}
 
 // TODO: cleanup maybe
 pub fn atbash(s: &str) -> String {
