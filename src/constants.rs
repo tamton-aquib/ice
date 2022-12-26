@@ -14,7 +14,9 @@ lazy_static! {
     ];
     pub static ref ALPHABETS: &'static str = "abcdefghijklmnopqrstuvwxyz";
     pub static ref ALT_PHABETS: &'static str = "abcdefghiklmnopqrstuwxyz";
-    pub static ref DNA: HashMap<&'static str, char> = HashMap::from([
+    pub static ref DNA2: HashMap<char, &'static str> =
+        HashMap::from([('A', "00"), ('C', "10"), ('G', "01"), ('T', "11")]);
+    pub static ref DNA1: HashMap<&'static str, char> = HashMap::from([
         ("AAA", 'a'),
         ("CAA", 'q'),
         ("GAA", 'G'),

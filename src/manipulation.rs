@@ -10,6 +10,10 @@ pub fn reverse(s: &str) -> String {
     s.chars().rev().collect()
 }
 
+pub fn length(s: &str) -> String {
+    s.len().to_string()
+}
+
 pub fn remove_whitespace(s: &str) -> String {
     return s.split_whitespace().collect();
 }

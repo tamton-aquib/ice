@@ -57,6 +57,10 @@ mod tests {
             manipulation::upper("A retarded SENTENCE!!"),
             "A RETARDED SENTENCE!!"
         );
+        assert_eq!(
+            manipulation::reverse("A retarded SENTENCE!!"),
+            "!!ECNETNES dedrater A"
+        );
     }
 
     // general.rs
@@ -87,7 +91,13 @@ mod tests {
     #[test]
     fn check_extractor() {
         assert!(extract::extractor("email", "Cargo.toml").contains("aquibjavedt007@gmail.com"));
-        assert!(extract::extractor("phone", "todo.norg").contains("9388884586"));
+        assert!(extract::extractor("phone", "todo.norg").contains("2333897193"));
         assert!(extract::extractor("ip", "todo.norg").contains("1.1.1.1"));
+    }
+
+    #[test]
+    fn check_utils() {
+        assert!(utils::is_all_in("234234234", &['2', '3', '4']));
+        assert!(utils::is_hex_repr("deadbeef"));
     }
 }

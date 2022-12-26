@@ -1,4 +1,5 @@
 use crate::utils;
+use crate::utils::Chunkify;
 
 pub fn b64(s: &str) -> String {
     match base64::decode(s) {
@@ -38,8 +39,9 @@ pub fn octal(s: &str) -> String {
 
 pub fn binary(s: &str) -> String {
     if s.chars().all(|x| ['0', '1', ' '].contains(&x)) {
-        s.split_whitespace()
-            .map(|c| u8::from_str_radix(c, 2).unwrap() as char)
+        s.chunkify()
+            .chunks(8)
+            .map(|c| u8::from_str_radix(&String::from_iter(c), 2).unwrap() as char)
             .collect()
     } else {
         s.chars().fold(String::new(), |acc, i| {

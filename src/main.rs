@@ -71,6 +71,7 @@ Example : ice b64 bmljZQ=="
         "upper" => manipulation::upper(query),
         "remove_whitespace" | "rw" => manipulation::remove_whitespace(query),
         "reverse" | "rev" => manipulation::reverse(query),
+        "length" | "len" => manipulation::length(query),
 
         // General
         "a1z26" | "az" => general::a1z26(query),

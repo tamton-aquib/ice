@@ -1,24 +1,31 @@
-use crate::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA};
+use crate::base;
+use crate::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA1, DNA2};
+use crate::utils::Chunkify;
 
 // TODO: on the way, does not work.
 pub fn dna(s: &str) -> String {
-    let mappings = &DNA;
-
-    s.split_whitespace()
-        .collect::<String>()
-        .chars()
-        .collect::<Vec<char>>()
+    let str_take1: String = s
+        .chunkify()
         .chunks(3)
-        .map(|i| mappings.get(&*String::from_iter(i)).unwrap())
-        .collect()
+        .map(|i| DNA1.get(&*String::from_iter(i)).unwrap())
+        .collect();
+    let str_take2: String = s
+        .to_uppercase()
+        .chunkify()
+        .chunks(1)
+        .map(|c| *DNA2.get(&c[0]).unwrap())
+        .collect();
+
+    let nice = base::binary(&str_take2);
+    println!("Noice: {nice:?}");
+
+    format!("1: {}\n2: {}", str_take1, str_take2)
 }
 
 // NOTE: on the way, doesnt work now.
 pub fn railfence(s: &str) -> String {
-    let news: String = s.to_lowercase().split_whitespace().collect();
-    let nice = news
-        .chars()
-        .collect::<Vec<char>>()
+    let nice = s
+        .chunkify()
         .chunks(3)
         .map(|i| i.iter().collect::<String>())
         .collect::<Vec<String>>();
@@ -26,43 +33,35 @@ pub fn railfence(s: &str) -> String {
     "noice".to_owned()
 }
 
-// TODO: Cleanify
+// TODO: Cleanify the hacks
 pub fn bacon(s: &str) -> String {
-    let string = s.to_lowercase().replace("0", "a").replace("1", "b");
-    let str_take1: String = string
-        .split_whitespace()
+    let clean_str = s.replace("0", "a").replace("1", "b").to_lowercase();
+
+    let str_take1: String = clean_str
+        .chunkify()
+        .chunks(5)
         .map(|word| {
-            word.chars()
-                .collect::<Vec<char>>()
-                .chunks(5)
-                .map(|c| {
-                    let idx = BACON1
-                        .iter()
-                        .position(|&i| i == String::from_iter(c))
-                        .unwrap();
-                    ALPHABETS.chars().nth(idx).unwrap()
-                })
-                .collect::<String>()
-        })
-        .collect();
-    let str_take2: String = string
-        .split_whitespace()
-        .map(|word| {
-            word.chars()
-                .collect::<Vec<char>>()
-                .chunks(5)
-                .map(|c| {
-                    let idx = BACON2
-                        .iter()
-                        .position(|&i| i == String::from_iter(c))
-                        .unwrap();
-                    ALT_PHABETS.chars().nth(idx).unwrap()
-                })
-                .collect::<String>()
+            let idx = BACON1
+                .iter()
+                .position(|&i| i == String::from_iter(word))
+                .unwrap_or(100);
+            ALPHABETS.chars().nth(idx).unwrap_or('?')
         })
         .collect();
 
-    format!("{}\n{}", str_take1, str_take2)
+    let str_take2: String = clean_str
+        .chunkify()
+        .chunks(5)
+        .map(|word| {
+            let idx = BACON2
+                .iter()
+                .position(|&i| i == String::from_iter(word))
+                .unwrap_or(100);
+            ALT_PHABETS.chars().nth(idx).unwrap_or('?')
+        })
+        .collect();
+
+    format!("1: {}\n2: {}", str_take1, str_take2)
 }
 
 // TODO: cleanup maybe
