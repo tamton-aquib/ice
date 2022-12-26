@@ -10,17 +10,20 @@ version: 0.0.13
 *  PLANNED TODO
 **  General
     - (x) a1z26
-    - (-) atbash
+    - (x) atbash
     - (x) ascii
-    - (=) railfence (unfixed keys)
-    - (x) bacon (uv/ij ambiguity)
+    - (x) bacon -(uv/ij ambiguity)-
+    - (-) playfair, DNA, railfence
     - ( ) affine, bifid
     - ( ) substitution
-    - (=) hasher using dehash api -> temp not working.
+
+**  API services
+    - ( ) [factordb api]{http://factordb.com/api?query=12}
+    - (=) [hasher using dehash api]{https://api.dehash.lt/api.php?search=} -> temp not working.
 
 **  Basic manipulation
     - (x) upper, lower
-    - (x) remove whitespace
+    - (x) remove whitespace, reverse, length
     - ( ) sort, uniq, filter
     - ( ) remove line numbers or recurring patterns
     - ( ) url encode/decode
@@ -41,24 +44,27 @@ version: 0.0.13
     - (x) base02 (binary)
     - (x) base08 (octa)
     - (x) base16 (hex)
-    - (x) base32
-    - (x) base64
-    - ( ) base45
-    - ( ) base58
-    - ( ) base62
-    - ( ) base85
+    - (x) base32, base64
+    - ( ) base45, base58, base62, base85
 
-** Extarctors (extract from string)
-   - (x) phone, email, ip  %test strings: noice@gmail.com, 2333897193%
-   - ( ) mac, date formats, etc %192.168.1.1  1.1.1.1 255.255.255.0%
-   - ( ) exif metadata.
-   - ( ) extract flag format from a binary file.
-   - ( ) magic bytes.
+**  Extarctors (extract from string)
+    - (x) phone, email, ip  %test strings: noice@gmail.com, 2333897193%
+    - ( ) mac, date formats, etc %192.168.1.1  1.1.1.1 255.255.255.0%
+    - ( ) exif metadata.
+    - ( ) extract flag format from a binary file.
+    - ( ) magic bytes.
 
 **  Advanced
     - ( ) Advanced stuff (maybe wont do this)
     - ( ) ECB and CBC
     - ( ) RSA
+
+**  IDK
+    - DTMF + audio
+    - morse audio
+    - stereogram
+    - QR codes
+    - Keyboard shift
 
 *  PROJECT TODO
    - ( ) scoring methods for efficiency.

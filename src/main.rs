@@ -54,10 +54,10 @@ Example : ice b64 bmljZQ=="
 
         // XOR commands
         "xor" => String::from("Please select one from hxh, sxs, sxb instead!"),
-        "hxh" => xor::hex_x_hex(&args[2], &args[3]),
-        "sxs" => xor::str_x_str(&args[2], &args[3]),
-        "sxb" | "bxs" => xor::str_x_byte(&args[2]),
-        "hxb" | "bxh" => xor::hex_x_byte(&args[2]),
+        "hxh" => xor::hex_x_hex(query, &args[3]),
+        "sxs" => xor::str_x_str(query, &args[3]),
+        "sxb" | "bxs" => xor::str_x_byte(query),
+        "hxb" | "bxh" => xor::hex_x_byte(query),
 
         // Base commands
         "b64" => base::b64(query),
@@ -78,7 +78,6 @@ Example : ice b64 bmljZQ=="
         "atbash" => general::atbash(query),
         "ascii" => general::ascii(query),
         "bacon" => general::bacon(query),
-        "railfence" => general::railfence(query),
 
         //Extractor
         "email" | "emails" | "mails" | "mail" => extract::extractor("email", query),
@@ -87,7 +86,10 @@ Example : ice b64 bmljZQ=="
 
         // Analyzer
         // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),
-        "dna" => general::dna(query),
+        // NOTE: Working on...
+        "DNA" | "dna" => general::dna(query),
+        "playfair" | "pf" => general::playfair(query, &args[3]),
+        "railfence" => general::railfence(query),
         _ => String::from("Subcommand not found!"),
     };
 

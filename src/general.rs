@@ -2,12 +2,52 @@ use crate::base;
 use crate::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA1, DNA2};
 use crate::utils::Chunkify;
 
+// TODO: a pain to do
+pub fn playfair(s: &str, k: &str) -> String {
+    let mut matrix: Vec<char> = Vec::new();
+
+    for c in k.split_whitespace().collect::<String>().chars() {
+        if !matrix.contains(&c) {
+            matrix.push(c);
+        }
+    }
+
+    for i in "abcdefghiklmnopqrstuvwxyz".chars() {
+        if !matrix.contains(&i) {
+            matrix.push(i);
+        }
+    }
+
+    let converted_matrix: Vec<char> = matrix
+        .chunks(5)
+        .map(|i| {
+            println!("{i:?}");
+            'a'
+        })
+        .collect();
+
+    let alr = s
+        .chunkify()
+        .chunks(2)
+        .map(|c| {
+            println!("{} {}", c[0], if c.len() == 1 { 'X' } else { c[1] });
+            // println!("{}", c[1]);
+            'a'
+        })
+        .collect::<Vec<char>>();
+
+    "noice".to_string()
+}
+
 // TODO: on the way, does not work.
 pub fn dna(s: &str) -> String {
     let str_take1: String = s
         .chunkify()
         .chunks(3)
-        .map(|i| DNA1.get(&*String::from_iter(i)).unwrap())
+        .map(|i| {
+            DNA1.get(&*String::from_iter(i))
+                .expect(&format!("Chunk '{:?}' not found in the list", i))
+        })
         .collect();
     let str_take2: String = s
         .to_uppercase()
