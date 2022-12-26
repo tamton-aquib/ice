@@ -70,6 +70,7 @@ Example : ice b64 bmljZQ=="
         "lower" => manipulation::lower(query),
         "upper" => manipulation::upper(query),
         "remove_whitespace" | "rw" => manipulation::remove_whitespace(query),
+        "reverse" | "rev" => manipulation::reverse(query),
 
         // General
         "a1z26" | "az" => general::a1z26(query),
@@ -85,6 +86,7 @@ Example : ice b64 bmljZQ=="
 
         // Analyzer
         // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),
+        "dna" => general::dna(query),
         _ => String::from("Subcommand not found!"),
     };
 

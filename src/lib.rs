@@ -1,13 +1,14 @@
 pub mod base;
 pub mod caesar;
+pub mod constants;
+pub mod extract;
 pub mod general;
 pub mod manipulation;
 pub mod morse;
+pub mod utils;
 pub mod xor;
 // pub mod hasher;
 // pub mod analyze;
-pub mod extract;
-pub mod utils;
 
 // TODO: add test cases for each module.
 // TODO: add better corner cases for each function.

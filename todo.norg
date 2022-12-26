@@ -9,70 +9,70 @@ version: 0.0.13
 
 *  PLANNED TODO
 **  General
-    - [x] a1z26
-    - [-] atbash
-    - [x] ascii
-    - [=] railfence (unfixed keys)
-    - [x] bacon (uv/ij ambiguity)
-    - [ ] affine, bifid
-    - [ ] substitution
-    - [=] hasher using dehash api -> temp not working.
+    - (x) a1z26
+    - (-) atbash
+    - (x) ascii
+    - (=) railfence (unfixed keys)
+    - (x) bacon (uv/ij ambiguity)
+    - ( ) affine, bifid
+    - ( ) substitution
+    - (=) hasher using dehash api -> temp not working.
 
 **  Basic manipulation
-    - [x] upper, lower
-    - [x] remove whitespace
-    - [ ] sort, uniq, filter
-    - [ ] remove line numbers or recurring patterns
-    - [ ] url encode/decode
+    - (x) upper, lower
+    - (x) remove whitespace
+    - ( ) sort, uniq, filter
+    - ( ) remove line numbers or recurring patterns
+    - ( ) url encode/decode
 
 **  Caesar
-    - [x] caesar
-    - [x] rot13
-    - [ ] rot47
-    - [x] vigenere
-    - [ ] score system
+    - (x) caesar
+    - (x) rot13
+    - ( ) rot47
+    - (x) vigenere
+    - ( ) score system
 
 **  XOR
-    - [x] single byte (sxb)
-    - [-] hex to hex (hxh)
-    - [-] string to string (sxs)
+    - (x) single byte (sxb)
+    - (-) hex to hex (hxh)
+    - (-) string to string (sxs)
 
 **  BASE
-    - [x] base02 (binary)
-    - [x] base08 (octa)
-    - [x] base16 (hex)
-    - [x] base32
-    - [x] base64
-    - [ ] base45
-    - [ ] base58
-    - [ ] base62
-    - [ ] base85
+    - (x) base02 (binary)
+    - (x) base08 (octa)
+    - (x) base16 (hex)
+    - (x) base32
+    - (x) base64
+    - ( ) base45
+    - ( ) base58
+    - ( ) base62
+    - ( ) base85
 
 ** Extarctors (extract from string)
-   - [x] phone, email, ip  +test strings: aquibjavedt007@gmail.com, 9388884586+
-   - [ ] mac, date formats, etc +192.168.1.1  1.1.1.1 255.255.255.0+
-   - [ ] exif metadata.
-   - [ ] extract flag format from a binary file.
-   - [ ] magic bytes.
+   - (x) phone, email, ip  %test strings: noice@gmail.com, 2333897193%
+   - ( ) mac, date formats, etc %192.168.1.1  1.1.1.1 255.255.255.0%
+   - ( ) exif metadata.
+   - ( ) extract flag format from a binary file.
+   - ( ) magic bytes.
 
 **  Advanced
-    - [ ] Advanced stuff (maybe wont do this)
-    - [ ] ECB and CBC
-    - [ ] RSA
+    - ( ) Advanced stuff (maybe wont do this)
+    - ( ) ECB and CBC
+    - ( ) RSA
 
 *  PROJECT TODO
-   - [ ] scoring methods for efficiency.
-   - [-] write tests for each mod.
-   - [ ] Reduce the number of unwraps.
-   - [ ] Automatic result finding.
-   - [ ] identification by similarity.
-   - [ ] annotating each module.
-   - [ ] add colors to output.
-   - [ ] add aliases for each subcommand.
-   - [x] read from stdin.
-   - [ ] sanitize inputs for extra characters.
-   - [ ] local man page(help page).
-   - [ ] edge cases + cleanify (capital + small)
+   - ( ) scoring methods for efficiency.
+   - (-) write tests for each mod.
+   - ( ) Reduce the number of unwraps.
+   - ( ) Automatic result finding.
+   - ( ) identification by similarity.
+   - ( ) annotating each module.
+   - ( ) add colors to output.
+   - ( ) add aliases for each subcommand.
+   - (x) read from stdin.
+   - ( ) sanitize inputs for extra characters.
+   - ( ) local man page(help page).
+   - ( ) edge cases + cleanify (capital + small)
 
 #comment
    norg file format: [nvim-neorg]{https://github.com/nvim-neorg/neorg}
