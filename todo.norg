@@ -26,7 +26,7 @@ version: 0.0.13
     - (x) remove whitespace, reverse, length
     - ( ) sort, uniq, filter
     - ( ) remove line numbers or recurring patterns
-    - ( ) url encode/decode
+    - (x) url encode/decode
 
 **  Caesar
     - (x) caesar

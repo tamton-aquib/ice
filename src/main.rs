@@ -84,12 +84,13 @@ Example : ice b64 bmljZQ=="
         "phone" | "phones" | "mobile" | "number" => extract::extractor("phone", query),
         "ipv4" | "ip" | "ips" => extract::extractor("ip", query),
 
-        // Analyzer
+        // On the way...
         // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),
-        // NOTE: Working on...
         "DNA" | "dna" => general::dna(query),
         "playfair" | "pf" => general::playfair(query, &args[3]),
         "railfence" => general::railfence(query),
+        "urle" | "ue" | "urlenc" | "urlencode" => general::url_encode(query),
+        "urld" | "ud" | "urldec" | "urldecode" => general::url_decode(query),
         _ => String::from("Subcommand not found!"),
     };
 

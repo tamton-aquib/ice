@@ -73,9 +73,17 @@ mod tests {
             general::bacon("AAABB AAABA ABBAB AAABB AABAA AAAAB AAAAA AAABA ABBAB ABBAA")
                 .contains("dcodebacon")
         );
+        assert_eq!(
+            general::url_encode("https://www.twitter.com"),
+            "https%3A%2F%2Fwww.twitter.com"
+        );
+        assert_eq!(
+            general::url_decode("https%3A%2F%2Fwww.twitter.com"),
+            "https://www.twitter.com"
+        );
     }
 
-    //xor.rs
+    // xor.rs
     #[test]
     fn check_xor() {
         assert!(xor::hex_x_byte(

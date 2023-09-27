@@ -2,6 +2,16 @@ use crate::base;
 use crate::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA1, DNA2};
 use crate::utils::Chunkify;
 
+pub fn url_encode(s: &str) -> String {
+    urlencoding::encode(s).into()
+}
+
+pub fn url_decode(s: &str) -> String {
+    urlencoding::decode(s)
+        .expect("Error decoding the url string!")
+        .into()
+}
+
 // TODO: a pain to do
 pub fn playfair(s: &str, k: &str) -> String {
     let mut matrix: Vec<char> = Vec::new();
@@ -18,7 +28,7 @@ pub fn playfair(s: &str, k: &str) -> String {
         }
     }
 
-    let converted_matrix: Vec<char> = matrix
+    let _converted_matrix: Vec<char> = matrix
         .chunks(5)
         .map(|i| {
             println!("{i:?}");
@@ -26,7 +36,7 @@ pub fn playfair(s: &str, k: &str) -> String {
         })
         .collect();
 
-    let alr = s
+    let _alr = s
         .chunkify()
         .chunks(2)
         .map(|c| {
