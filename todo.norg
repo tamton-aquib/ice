@@ -18,7 +18,7 @@ version: 0.0.13
     - ( ) substitution
 
 **  API services
-    - ( ) [factordb api]{http://factordb.com/api?query=12}
+    - (x) [factordb api]{http://factordb.com/api?query=12}
     - (=) [hasher using dehash api]{https://api.dehash.lt/api.php?search=} -> temp not working.
 
 **  Basic manipulation
@@ -69,12 +69,12 @@ version: 0.0.13
 *  PROJECT TODO
    - ( ) scoring methods for efficiency.
    - (-) write tests for each mod.
-   - ( ) Reduce the number of unwraps.
+   - (-) Reduce the number of unwraps.
    - ( ) Automatic result finding.
    - ( ) identification by similarity.
    - ( ) annotating each module.
    - ( ) add colors to output.
-   - ( ) add aliases for each subcommand.
+   - (-) add aliases for each subcommand.
    - (x) read from stdin.
    - ( ) sanitize inputs for extra characters.
    - ( ) local man page(help page).

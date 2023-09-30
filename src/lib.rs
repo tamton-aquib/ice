@@ -5,6 +5,7 @@ pub mod extract;
 pub mod general;
 pub mod manipulation;
 pub mod morse;
+pub mod services;
 pub mod utils;
 pub mod xor;
 // pub mod hasher;

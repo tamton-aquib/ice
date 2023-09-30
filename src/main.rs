@@ -1,7 +1,5 @@
-use ice::{base, caesar, extract, general, manipulation, morse, xor};
+use ice::{base, caesar, extract, general, manipulation, morse, services, xor};
 const VERSION: &str = "0.0.2";
-
-// const HELP: &str = r#"
 
 fn main() {
     let mut args: Vec<String> = std::env::args().collect();
@@ -91,6 +89,7 @@ Example : ice b64 bmljZQ=="
         "railfence" => general::railfence(query),
         "urle" | "ue" | "urlenc" | "urlencode" => general::url_encode(query),
         "urld" | "ud" | "urldec" | "urldecode" => general::url_decode(query),
+        "fdb" | "factor" | "factordb" => services::factordb(query),
         _ => String::from("Subcommand not found!"),
     };
 
