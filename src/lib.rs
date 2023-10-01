@@ -97,6 +97,12 @@ mod tests {
         );
     }
 
+    // Check services.rs
+    #[test]
+    fn check_services() {
+        assert_eq!(services::factordb("12"), "2 3");
+    }
+
     #[test]
     fn check_extractor() {
         assert!(extract::extractor("email", "Cargo.toml").contains("aquibjavedt007@gmail.com"));
