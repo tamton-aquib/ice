@@ -1,5 +1,5 @@
 use ice::{base, caesar, extract, general, manipulation, morse, services, xor};
-const VERSION: &str = "0.0.2";
+const VERSION: &str = "0.1.0";
 
 fn main() {
     let mut args: Vec<String> = std::env::args().collect();
