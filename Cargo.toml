@@ -1,10 +1,10 @@
 [package]
 name = "ice"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 authors = ["tamton-aquib <aquibjavedt007@gmail.com>"]
 license = "MIT"
-description = "A simple CTF tool set"
+description = "A simple CTF tool store"
 homepage = "https://github.com/tamton-aquib/ice"
 repository = "https://github.com/tamton-aquib/ice"
 readme = "README.md"
