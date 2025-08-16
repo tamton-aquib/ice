@@ -1,22 +1,24 @@
+pub mod analysis;
+pub mod app;
 pub mod base;
-pub mod caesar;
-pub mod constants;
-pub mod extract;
-pub mod general;
-pub mod manipulation;
-pub mod morse;
-pub mod services;
-pub mod utils;
-pub mod xor;
+pub mod ciphers;
 pub mod hasher;
-// pub mod analyze;
+pub mod utils;
 
 // TODO: add test cases for each module.
 // TODO: add better corner cases for each function.
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::{
+        analysis::{extract, manipulation},
+        base::base::{b32, b64, binary, hexadecimal, octal},
+        ciphers::general::general,
+        ciphers::xor,
+        ciphers::{caesar, morse},
+        hasher::hasher,
+        utils::{services, utils},
+    };
 
     // caesar.rs
     #[test]
@@ -36,11 +38,11 @@ mod tests {
     // base.rs
     #[test]
     fn check_base() {
-        assert_eq!(base::b64("bmljZQ=="), "nice");
-        assert_eq!(base::b32("NZUWGZI="), "nice");
-        assert_eq!(base::hexadecimal("6e696365"), "nice");
-        assert_eq!(base::octal("156 151 143 145 "), "nice");
-        assert_eq!(base::binary("01101110 01101001 01100011 01100101 "), "nice");
+        assert_eq!(b64("bmljZQ=="), "nice");
+        assert_eq!(b32("NZUWGZI="), "nice");
+        assert_eq!(hexadecimal("6e696365"), "nice");
+        assert_eq!(octal("156 151 143 145 "), "nice");
+        assert_eq!(binary("01101110 01101001 01100011 01100101 "), "nice");
     }
 
     // manipulation.rs
@@ -103,6 +105,7 @@ mod tests {
         assert_eq!(services::factordb("12"), "2 3");
     }
 
+    // Check extract.rs
     #[test]
     fn check_extractor() {
         assert!(extract::extractor("email", "Cargo.toml").contains("aquibjavedt007@gmail.com"));
@@ -110,9 +113,21 @@ mod tests {
         assert!(extract::extractor("ip", "todo.norg").contains("1.1.1.1"));
     }
 
+    // Check utils.rs
     #[test]
     fn check_utils() {
         assert!(utils::is_all_in("234234234", &['2', '3', '4']));
         assert!(utils::is_hex_repr("deadbeef"));
+    }
+
+    // Check hasher.rs
+    #[test]
+    fn check_hasher() {
+        assert!(hasher::md5("hello world").contains("5eb63bbbe01eeed093cb22bb8f5acdc3"));
+        assert!(hasher::sha1("hello world").contains("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"));
+        assert!(hasher::sha256("hello world")
+            .contains("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"));
+        assert!(hasher::sha512("hello world")
+            .contains("309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f"));
     }
 }

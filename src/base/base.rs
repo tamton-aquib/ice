@@ -1,5 +1,5 @@
-use crate::utils;
-use crate::utils::Chunkify;
+use crate::utils::utils;
+use crate::utils::utils::Chunkify;
 
 pub fn b64(s: &str) -> String {
     match base64::decode(s) {

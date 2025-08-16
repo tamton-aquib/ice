@@ -1,7 +1,6 @@
 use pico_args::Arguments;
 
-mod cli;
-use cli::{Command, parse_args};
+use ice::app::cli::{parse_args, Command};
 
 fn print_usage() {
     println!("ICE - A command-line tool for various ciphers, encoding, and text manipulation.\n");
@@ -12,7 +11,6 @@ fn print_usage() {
 }
 
 fn main() {
-
     let mut args = Arguments::from_env();
 
     let command = match parse_args(&mut args) {

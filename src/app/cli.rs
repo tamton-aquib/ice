@@ -1,4 +1,10 @@
-use ice::{base, caesar, extract, general, hasher, manipulation, morse, services, xor};
+use crate::{
+    analysis::{extract, manipulation},
+    base::base,
+    ciphers::{caesar, general::general, morse, xor},
+    hasher::hasher,
+    utils::services,
+};
 use pico_args::Arguments;
 
 #[derive(Debug)]

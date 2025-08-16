@@ -1,6 +1,6 @@
-use crate::base;
-use crate::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA1, DNA2};
-use crate::utils::Chunkify;
+use crate::app::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA1, DNA2};
+use crate::base::base;
+use crate::utils::utils::Chunkify;
 
 pub fn url_encode(s: &str) -> String {
     urlencoding::encode(s).into()
