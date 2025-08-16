@@ -35,6 +35,7 @@ pub enum Command {
     UrlDecode(String),
     FactorDb(String),
     Help,
+    Version,
     Unknown(String),
 }
 
@@ -75,6 +76,7 @@ impl Command {
             Command::UrlDecode(text) => println!("{}", general::url_decode(text).trim()),
             Command::FactorDb(number) => println!("{}", services::factordb(number).trim()),
             Command::Help => {}
+            Command::Version => {}
             Command::Unknown(cmd) => {
                 eprintln!("Error: Unknown subcommand '{}'", cmd);
             }
@@ -85,6 +87,9 @@ impl Command {
 pub fn parse_args(args: &mut Arguments) -> Result<Command, String> {
     if args.contains(["-h", "--help"]) {
         return Ok(Command::Help);
+    }
+    if args.contains(["-v", "--version"]) {
+        return Ok(Command::Version);
     }
 
     let subcommand = match args.subcommand() {

@@ -28,6 +28,9 @@ fn main() {
         Command::Help => {
             print_usage();
         }
+        Command::Version => {
+            println!("ice {}", env!("CARGO_PKG_VERSION"));
+        }
         Command::Unknown(cmd) => {
             eprintln!("Error: Unknown subcommand '{}'", cmd);
             print_usage();

@@ -73,9 +73,9 @@ jobs:
         if: runner.os != 'macOS'
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-            upx --best target/${{ matrix.target }}/release/ice.exe
+            upx --best --lzma target/${{ matrix.target }}/release/ice.exe
           else
-            upx --best target/${{ matrix.target }}/release/ice
+            upx --best --lzma target/${{ matrix.target }}/release/ice
           fi
         shell: bash
 
