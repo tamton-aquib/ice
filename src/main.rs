@@ -1,96 +1,44 @@
+use clap::Parser;
+use cli::{Cli, Subcommands};
 use ice::{base, caesar, extract, general, manipulation, morse, services, xor};
-const VERSION: &str = "0.1.0";
+
+mod cli;
 
 fn main() {
-    let mut args: Vec<String> = std::env::args().collect();
+    let cli = Cli::parse();
 
-    if ["-h", "-V", "--help", "--version"]
-        .iter()
-        .any(|f| args.contains(&f.to_string()))
-        || args.len() == 1
-    {
-        println!(
-            "
-Ice - A simple ctf tool store.
-version: {VERSION}
-
-Usage   : ice [subcommand] [query] [OPTIONAL-QUERIES]
-Example : ice b64 bmljZQ=="
-        );
-        return;
-    }
-
-    if !atty::is(atty::Stream::Stdin) {
-        let mut extrargs: Vec<String> = std::io::stdin().lines().map(|i| i.unwrap()).collect();
-        args.append(&mut extrargs);
-    }
-
-    if args.len() <= 2 {
-        println!("Please provide the subcommand and/or query!");
-        println!("Example: ice b64 bmljZQ==");
-        return;
-    }
-
-    let subcommand = &args[1];
-    let query = &args[2].trim();
-
-    let res = match subcommand.trim() {
-        // Caesar commands
-        "caesar" | "ceasar" | "c" => caesar::caesar(query),
-        "rot13" | "rot" => caesar::rot13(query),
-        "vigenere" | "vig" => {
-            if &args.len() >= &4 {
-                caesar::vigenere(query, &args[3])
-            } else {
-                String::from("Please provide a key!")
-            }
-        }
-
-        // Morse command
-        // TODO: morse decode and encode into seperate subcommands
-        "morse" => morse::morse(query),
-
-        // XOR commands
-        "xor" => String::from("Please select one from hxh, sxs, sxb instead!"),
-        "hxh" => xor::hex_x_hex(query, &args[3]),
-        "sxs" => xor::str_x_str(query, &args[3]),
-        "sxb" | "bxs" => xor::str_x_byte(query),
-        "hxb" | "bxh" => xor::hex_x_byte(query),
-
-        // Base commands
-        "b64" => base::b64(query),
-        "b32" => base::b32(query),
-        "octal" | "oct" => base::octal(query),
-        "hex" | "hexa" | "b16" => base::hexadecimal(query),
-        "binary" | "bin" => base::binary(query),
-
-        // Manipulation commands
-        "lower" => manipulation::lower(query),
-        "upper" => manipulation::upper(query),
-        "remove_whitespace" | "rw" => manipulation::remove_whitespace(query),
-        "reverse" | "rev" => manipulation::reverse(query),
-        "length" | "len" => manipulation::length(query),
-
-        // General
-        "a1z26" | "az" => general::a1z26(query),
-        "atbash" => general::atbash(query),
-        "ascii" => general::ascii(query),
-        "bacon" => general::bacon(query),
-
-        //Extractor
-        "email" | "emails" | "mails" | "mail" => extract::extractor("email", query),
-        "phone" | "phones" | "mobile" | "number" => extract::extractor("phone", query),
-        "ipv4" | "ip" | "ips" => extract::extractor("ip", query),
-
-        // On the way...
-        // "strings" | "string" | "rb" => analyze::read_binary(query, &args[2]),
-        "DNA" | "dna" => general::dna(query),
-        "playfair" | "pf" => general::playfair(query, &args[3]),
-        "railfence" => general::railfence(query),
-        "urle" | "ue" | "urlenc" | "urlencode" => general::url_encode(query),
-        "urld" | "ud" | "urldec" | "urldecode" => general::url_decode(query),
-        "fdb" | "factor" | "factordb" => services::factordb(query),
-        _ => String::from("Subcommand not found!"),
+    let res = match &cli.command {
+        Subcommands::Caesar { text } => caesar::caesar(text),
+        Subcommands::Rot13 { text } => caesar::rot13(text),
+        Subcommands::Vigenere { text, key } => caesar::vigenere(text, key),
+        Subcommands::Morse { text } => morse::morse(text),
+        Subcommands::Hxh { hex1, hex2 } => xor::hex_x_hex(hex1, hex2),
+        Subcommands::Sxs { str1, str2 } => xor::str_x_str(str1, str2),
+        Subcommands::Sxb { text } => xor::str_x_byte(text),
+        Subcommands::Hxb { text } => xor::hex_x_byte(text),
+        Subcommands::B64 { text } => base::b64(text),
+        Subcommands::B32 { text } => base::b32(text),
+        Subcommands::Octal { text } => base::octal(text),
+        Subcommands::Hex { text } => base::hexadecimal(text),
+        Subcommands::Binary { text } => base::binary(text),
+        Subcommands::Lower { text } => manipulation::lower(text),
+        Subcommands::Upper { text } => manipulation::upper(text),
+        Subcommands::RemoveWhitespace { text } => manipulation::remove_whitespace(text),
+        Subcommands::Reverse { text } => manipulation::reverse(text),
+        Subcommands::Length { text } => manipulation::length(text),
+        Subcommands::A1z26 { text } => general::a1z26(text),
+        Subcommands::Atbash { text } => general::atbash(text),
+        Subcommands::Ascii { text } => general::ascii(text),
+        Subcommands::Bacon { text } => general::bacon(text),
+        Subcommands::Email { text } => extract::extractor("email", text),
+        Subcommands::Phone { text } => extract::extractor("phone", text),
+        Subcommands::Ipv4 { text } => extract::extractor("ip", text),
+        Subcommands::Dna { text } => general::dna(text),
+        Subcommands::Playfair { text, key } => general::playfair(text, key),
+        Subcommands::Railfence { text } => general::railfence(text),
+        Subcommands::Urle { text } => general::url_encode(text),
+        Subcommands::Urld { text } => general::url_decode(text),
+        Subcommands::Fdb { number } => services::factordb(number),
     };
 
     println!("{}", res.trim());

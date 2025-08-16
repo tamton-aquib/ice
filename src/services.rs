@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct FactorEntry(String, u32);
 
 #[derive(Debug, Deserialize)]
