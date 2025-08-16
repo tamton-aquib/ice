@@ -16,6 +16,7 @@ version: 0.0.13
     - (-) playfair, DNA, railfence
     - ( ) affine, bifid
     - ( ) substitution
+    - (x) hashing files and simple strings
 
 **  API services
     - (x) [factordb api]{http://factordb.com/api?query=12}
@@ -79,6 +80,11 @@ version: 0.0.13
    - ( ) sanitize inputs for extra characters.
    - ( ) local man page(help page).
    - ( ) edge cases + cleanify (capital + small)
+
+* Steps for release (just in case if i forget)
+    - Update version in Cargo.toml and PKGBUILD.
+    - Create version tag and push.
+    - Cargo publish.
 
 #comment
    norg file format: [nvim-neorg]{https://github.com/nvim-neorg/neorg}

@@ -8,7 +8,7 @@ pub mod morse;
 pub mod services;
 pub mod utils;
 pub mod xor;
-// pub mod hasher;
+pub mod hasher;
 // pub mod analyze;
 
 // TODO: add test cases for each module.

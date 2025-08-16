@@ -1,4 +1,4 @@
-use ice::{base, caesar, extract, general, manipulation, morse, services, xor};
+use ice::{base, caesar, extract, general, hasher, manipulation, morse, services, xor};
 use pico_args::Arguments;
 
 #[derive(Debug)]
@@ -34,6 +34,10 @@ pub enum Command {
     UrlEncode(String),
     UrlDecode(String),
     FactorDb(String),
+    Md5(String),
+    Sha1(String),
+    Sha256(String),
+    Sha512(String),
     Help,
     Version,
     Unknown(String),
@@ -75,6 +79,10 @@ impl Command {
             Command::UrlEncode(text) => println!("{}", general::url_encode(text).trim()),
             Command::UrlDecode(text) => println!("{}", general::url_decode(text).trim()),
             Command::FactorDb(number) => println!("{}", services::factordb(number).trim()),
+            Command::Md5(input) => println!("{}", hasher::md5(input).trim()),
+            Command::Sha1(input) => println!("{}", hasher::sha1(input).trim()),
+            Command::Sha256(input) => println!("{}", hasher::sha256(input).trim()),
+            Command::Sha512(input) => println!("{}", hasher::sha512(input).trim()),
             Command::Help => {}
             Command::Version => {}
             Command::Unknown(cmd) => {
@@ -230,10 +238,25 @@ pub fn parse_args(args: &mut Arguments) -> Result<Command, String> {
             args.free_from_str()
                 .map_err(|e| format!("Missing argument for fdb: {}", e))?,
         ),
+        "md5" => Command::Md5(
+            args.free_from_str()
+                .map_err(|e| format!("Missing argument for md5: {}", e))?,
+        ),
+        "sha1" => Command::Sha1(
+            args.free_from_str()
+                .map_err(|e| format!("Missing argument for sha1: {}", e))?,
+        ),
+        "sha256" => Command::Sha256(
+            args.free_from_str()
+                .map_err(|e| format!("Missing argument for sha256: {}", e))?,
+        ),
+        "sha512" => Command::Sha512(
+            args.free_from_str()
+                .map_err(|e| format!("Missing argument for sha512: {}", e))?,
+        ),
         "help" => Command::Help,
         _ => Command::Unknown(subcommand.to_string()),
     };
 
     Ok(cmd)
 }
-
