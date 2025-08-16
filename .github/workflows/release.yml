@@ -3,42 +3,117 @@ name: Release
 on:
   push:
     tags:
-      - v[0-9]+.*
-
-env:
-  CARGO_TERM_COLOR: always
+      - 'v*'
 
 jobs:
-  create-release:
+  extract-version:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.getver.outputs.version }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: taiki-e/create-gh-release-action@v1
+      - uses: actions/checkout@v4
+
+      - id: getver
+        run: |
+          # Extract version from the tag name (strip leading 'v')
+          version="${GITHUB_REF##*/}"
+          version="${version#v}"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          configuration: ".github/changelog-config.json"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  upload-assets:
+  release:
+    needs: extract-version
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            archive_cmd: tar czf ice-x86_64-unknown-linux-gnu.tar.gz -C target/x86_64-unknown-linux-gnu/release ice
+            asset_name: ice-x86_64-unknown-linux-gnu.tar.gz
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            archive_cmd: tar czf ice-x86_64-apple-darwin.tar.gz -C target/x86_64-apple-darwin/release ice
+            asset_name: ice-x86_64-apple-darwin.tar.gz
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            archive_cmd: 7z a ice-x86_64-pc-windows-msvc.zip target/x86_64-pc-windows-msvc/release/ice.exe
+            asset_name: ice-x86_64-pc-windows-msvc.zip
+
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: taiki-e/upload-rust-binary-action@v1
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
         with:
-          # (required)
-          bin: ice
-          # (optional) On which platform to distribute the `.tar.gz` file.
-          # [default value: unix]
-          # [possible values: all, unix, windows, none]
-          tar: unix
-          # (optional) On which platform to distribute the `.zip` file.
-          # [default value: windows]
-          # [possible values: all, unix, windows, none]
-          zip: windows
+          targets: ${{ matrix.target }}
+
+      - name: Install UPX
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get update && sudo apt-get install -y upx-ucl
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            brew install upx
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            choco install upx
+          fi
+        shell: bash
+
+      - name: Build binary
+        run: cargo build --release --target ${{ matrix.target }} --bin ice
+
+      - name: Compress binary (Linux/Windows only)
+        if: runner.os != 'macOS'
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            upx --best target/${{ matrix.target }}/release/ice.exe
+          else
+            upx --best target/${{ matrix.target }}/release/ice
+          fi
+        shell: bash
+
+      - name: Package binary
+        run: ${{ matrix.archive_cmd }}
+        shell: bash
+
+      - name: Create or Update Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v${{ needs.extract-version.outputs.version }}
+          name: "Release v${{ needs.extract-version.outputs.version }}"
+          body: ${{ needs.extract-version.outputs.changelog }}
+          artifacts: ${{ matrix.asset_name }}
+          allowUpdates: true
         env:
-          # (required)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update-aur:
+    needs: [extract-version, release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set AUR asset URL
+        run: echo "ASSET_URL=https://github.com/${{ github.repository }}/releases/download/v${{ needs.extract-version.outputs.version }}/ice-x86_64-unknown-linux-gnu.tar.gz" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Update AUR package
+        uses: ulises-jeremias/github-actions-aur-publish@v1
+        with:
+          pkgname: ice-bin
+          commit_username: "github-actions[bot]"
+          commit_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          pkgbuild: ./PKGBUILD
+          commit_message: "Update to v${{ needs.extract-version.outputs.version }}"
+          ssh_keyscan_types: rsa,ecdsa,ed25519
+        env:
+          PKGVER: ${{ needs.extract-version.outputs.version }}
+          PKGURL: ${{ env.ASSET_URL }}
