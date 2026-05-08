@@ -1,16 +1,8 @@
-// use hex::FromHex;
-
-pub trait Chunkify {
-    fn chunkify(self) -> Vec<char>;
-}
-
-impl Chunkify for &str {
-    fn chunkify(self) -> Vec<char> {
-        self.split_whitespace()
-            .collect::<String>()
-            .chars()
-            .collect()
-    }
+pub fn chunkify(s: &str) -> Vec<char> {
+    s.split_whitespace()
+        .collect::<String>()
+        .chars()
+        .collect()
 }
 
 pub fn is_hex_repr(s: &str) -> bool {

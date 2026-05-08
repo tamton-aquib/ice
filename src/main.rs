@@ -6,6 +6,11 @@ fn main() {
         .map(|s| s.into_string().unwrap())
         .collect();
 
+    if args.len() == 2 && (args[1] == "-h" || args[1] == "--help") {
+        ice::app::cli::print_help();
+        return;
+    }
+
     let stdin_has_content = !io::stdin().is_terminal();
 
     if stdin_has_content {
@@ -22,5 +27,8 @@ fn main() {
         std::process::exit(1);
     });
 
-    cli.command.run();
+    if let Err(e) = cli.command.run() {
+        eprintln!("Error: {}", e);
+        std::process::exit(1);
+    }
 }

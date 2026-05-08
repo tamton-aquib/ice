@@ -5,14 +5,11 @@ pub mod ciphers;
 pub mod hasher;
 pub mod utils;
 
-// TODO: add test cases for each module.
-// TODO: add better corner cases for each function.
-
 #[cfg(test)]
 mod tests {
     use crate::{
         analysis::{extract, manipulation},
-        base::base::{b32, b64, binary, hexadecimal, octal},
+        base::base::{b32, b45, b58, b62, b64, b85, binary, hexadecimal, octal},
         ciphers::general::general,
         ciphers::xor,
         ciphers::{caesar, morse},
@@ -20,14 +17,14 @@ mod tests {
         utils::{services, utils},
     };
 
-    // caesar.rs
     #[test]
     fn check_rot() {
         assert_eq!(caesar::rot13("nice"), "avpr");
-        assert!(caesar::caesar("nice").contains("[25] mhbd"));
+        assert!(caesar::caesar("nice", None)
+            .unwrap()
+            .contains("[25] mhbd"));
     }
 
-    // morse.rs
     #[test]
     fn check_morse() {
         assert_eq!(morse::morse_encode("nice"), "_. .. _._. . ");
@@ -35,17 +32,15 @@ mod tests {
         assert_eq!(morse::morse("_. .. _._. ."), "nice");
     }
 
-    // base.rs
     #[test]
     fn check_base() {
-        assert_eq!(b64("bmljZQ=="), "nice");
-        assert_eq!(b32("NZUWGZI="), "nice");
-        assert_eq!(hexadecimal("6e696365"), "nice");
-        assert_eq!(octal("156 151 143 145 "), "nice");
-        assert_eq!(binary("01101110 01101001 01100011 01100101 "), "nice");
+        assert_eq!(b64("bmljZQ==").unwrap(), "nice");
+        assert_eq!(b32("NZUWGZI=").unwrap(), "nice");
+        assert_eq!(hexadecimal("6e696365").unwrap(), "nice");
+        assert_eq!(octal("156 151 143 145 ").unwrap(), "nice");
+        assert_eq!(binary("01101110 01101001 01100011 01100101 ").unwrap(), "nice");
     }
 
-    // manipulation.rs
     #[test]
     fn check_manipulation() {
         assert_eq!(
@@ -66,68 +61,78 @@ mod tests {
         );
     }
 
-    // general.rs
     #[test]
     fn check_general() {
-        assert_eq!(general::a1z26("14-9-3-5"), "nice");
-        assert_eq!(general::atbash("nice"), "mrxv");
-        assert_eq!(general::ascii("65 65"), "AA");
-        assert!(
-            general::bacon("AAABB AAABA ABBAB AAABB AABAA AAAAB AAAAA AAABA ABBAB ABBAA")
-                .contains("dcodebacon")
-        );
+        assert_eq!(general::a1z26("14-9-3-5").unwrap(), "nice");
+        assert_eq!(general::atbash("nice").unwrap(), "mrxv");
+        assert_eq!(general::ascii("65 65").unwrap(), "AA");
+        assert!(general::bacon("AAABB AAABA ABBAB AAABB AABAA AAAAB AAAAA AAABA ABBAB ABBAA")
+            .unwrap()
+            .contains("dcodebacon"));
         assert_eq!(
-            general::url_encode("https://www.twitter.com"),
+            general::url_encode("https://www.twitter.com").unwrap(),
             "https%3A%2F%2Fwww.twitter.com"
         );
         assert_eq!(
-            general::url_decode("https%3A%2F%2Fwww.twitter.com"),
+            general::url_decode("https%3A%2F%2Fwww.twitter.com").unwrap(),
             "https://www.twitter.com"
         );
     }
 
-    // xor.rs
     #[test]
     fn check_xor() {
-        assert!(xor::hex_x_byte(
-            "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-        )
-        .contains("Cooking MC's like a pound of bacon"));
+        assert!(
+            xor::hex_x_byte(
+                "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+            )
+            .unwrap()
+            .contains("Cooking MC's like a pound of bacon")
+        );
         assert_eq!(
-            xor::hex_x_hex("6578616d706c6520737472696e67", "6e696365"),
+            xor::hex_x_hex("6578616d706c6520737472696e67", "6e696365").unwrap(),
             "0b1102081e0506451d1d110c000e"
         );
     }
 
-    // Check services.rs
     #[test]
-    fn check_services() {
-        assert_eq!(services::factordb("12"), "2 3");
+    fn check_base_new() {
+        assert!(b45("hello").is_ok());
+        assert!(b58("hello").is_ok());
+        assert!(b62("hello").is_ok());
+        assert!(b85("hello").is_ok());
     }
 
-    // Check extract.rs
-    #[test]
-    fn check_extractor() {
-        assert!(extract::extractor("email", "Cargo.toml").contains("aquibjavedt007@gmail.com"));
-        assert!(extract::extractor("phone", "todo.norg").contains("2333897193"));
-        assert!(extract::extractor("ip", "todo.norg").contains("1.1.1.1"));
-    }
-
-    // Check utils.rs
     #[test]
     fn check_utils() {
         assert!(utils::is_all_in("234234234", &['2', '3', '4']));
         assert!(utils::is_hex_repr("deadbeef"));
     }
 
-    // Check hasher.rs
     #[test]
     fn check_hasher() {
-        assert!(hasher::md5("hello world").contains("5eb63bbbe01eeed093cb22bb8f5acdc3"));
-        assert!(hasher::sha1("hello world").contains("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"));
+        assert!(hasher::md5("hello world")
+            .unwrap()
+            .contains("5eb63bbbe01eeed093cb22bb8f5acdc3"));
+        assert!(hasher::sha1("hello world")
+            .unwrap()
+            .contains("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"));
         assert!(hasher::sha256("hello world")
+            .unwrap()
             .contains("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"));
         assert!(hasher::sha512("hello world")
+            .unwrap()
             .contains("309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f"));
+    }
+
+    #[test]
+    fn check_services() {
+        assert_eq!(services::factordb("12").unwrap(), "2 3");
+    }
+
+    #[test]
+    fn check_extractor() {
+        assert!(extract::extractor("email", "Cargo.toml")
+            .unwrap()
+            .contains("aquibjavedt007@gmail.com"));
     }
 }

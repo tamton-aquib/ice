@@ -1,22 +1,23 @@
-use lazy_static::lazy_static;
 use std::collections::HashMap;
+use std::sync::LazyLock;
 
-lazy_static! {
-    pub static ref BACON1: &'static [&'static str] = &[
-        "aaaaa", "aaaab", "aaaba", "aaabb", "aabaa", "aabab", "aabba", "aabbb", "abaaa", "abaab",
-        "ababa", "ababb", "abbaa", "abbab", "abbba", "abbbb", "baaaa", "baaab", "baaba", "baabb",
-        "babaa", "babab", "babba", "babbb",
-    ];
-    pub static ref BACON2: &'static [&'static str] = &[
-        "aaaaa", "aaaab", "aaaba", "aaabb", "aabaa", "aabab", "aabba", "aabbb", "abaaa", "abaab",
-        "ababa", "ababb", "abbaa", "abbab", "abbba", "abbbb", "baaaa", "baaab", "baaba", "baabb",
-        "babaa", "babab", "babba", "babbb", "bbaaa", "bbaab",
-    ];
-    pub static ref ALPHABETS: &'static str = "abcdefghijklmnopqrstuvwxyz";
-    pub static ref ALT_PHABETS: &'static str = "abcdefghiklmnopqrstuwxyz";
-    pub static ref DNA2: HashMap<char, &'static str> =
-        HashMap::from([('A', "00"), ('C', "10"), ('G', "01"), ('T', "11")]);
-    pub static ref DNA1: HashMap<&'static str, char> = HashMap::from([
+pub static BACON1: &[&str] = &[
+    "aaaaa", "aaaab", "aaaba", "aaabb", "aabaa", "aabab", "aabba", "aabbb", "abaaa", "abaab",
+    "ababa", "ababb", "abbaa", "abbab", "abbba", "abbbb", "baaaa", "baaab", "baaba", "baabb",
+    "babaa", "babab", "babba", "babbb",
+];
+pub static BACON2: &[&str] = &[
+    "aaaaa", "aaaab", "aaaba", "aaabb", "aabaa", "aabab", "aabba", "aabbb", "abaaa", "abaab",
+    "ababa", "ababb", "abbaa", "abbab", "abbba", "abbbb", "baaaa", "baaab", "baaba", "baabb",
+    "babaa", "babab", "babba", "babbb", "bbaaa", "bbaab",
+];
+pub static ALPHABETS: &str = "abcdefghijklmnopqrstuvwxyz";
+pub static ALT_PHABETS: &str = "abcdefghiklmnopqrstuwxyz";
+pub static DNA2: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
+    HashMap::from([('A', "00"), ('C', "10"), ('G', "01"), ('T', "11")])
+});
+pub static DNA1: LazyLock<HashMap<&str, char>> = LazyLock::new(|| {
+    HashMap::from([
         ("AAA", 'a'),
         ("CAA", 'q'),
         ("GAA", 'G'),
@@ -81,5 +82,5 @@ lazy_static! {
         ("CTT", 'F'),
         ("GTT", 'V'),
         ("TTT", '.'),
-    ]);
-}
+    ])
+});

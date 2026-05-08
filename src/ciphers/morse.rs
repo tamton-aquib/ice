@@ -1,4 +1,3 @@
-// TODO: automatic detection
 pub fn morse(s: &str) -> String {
     if s.chars().all(|x| "._- ".contains(x)) {
         morse_decode(&s.replace("-", "_"))
@@ -7,9 +6,6 @@ pub fn morse(s: &str) -> String {
     }
 }
 
-/// Morse encoding.
-/// Returns encoded `String`.
-/// * `s`: &str (query string)
 pub fn morse_encode(s: &str) -> String {
     s.to_lowercase()
         .chars()
@@ -69,14 +65,11 @@ pub fn morse_encode(s: &str) -> String {
             '$' => "..._.._ ",
             '@' => ".__._. ",
             ' ' => "/",
-            _ => panic!("Character: {} cant be encoded!", c),
+            _ => "? ",
         })
         .collect()
 }
 
-/// Morse decoding.
-/// Returns decoded `String`
-/// * `s`: &str (query string)
 pub fn morse_decode(s: &str) -> String {
     let letters = s.split_whitespace().collect::<Vec<&str>>();
     letters

@@ -1,47 +1,49 @@
-// TODO: maybe add a scoring system to efficiently get correct ones.
-// This is kinda complicated (diff inputs + diff output formats)
+use anyhow::{Context, Result};
 
-// TODO: does not work
-pub fn hex_x_hex(a: &str, b: &str) -> String {
-    let a_decoded = hex::decode(a).expect("first argument is not a valid hex!");
-    let b_decoded = hex::decode(b).expect("second argument is not a valid hex!");
+pub fn hex_x_hex(a: &str, b: &str) -> Result<String> {
+    let a_decoded = hex::decode(a).context("first argument is not a valid hex string")?;
+    let b_decoded = hex::decode(b).context("second argument is not a valid hex string")?;
 
-    hex::encode(
-        a_decoded
-            .iter()
-            .zip(b_decoded.iter().cycle())
-            .map(|(x1, x2)| (x1 ^ x2) as char)
-            .collect::<String>(),
-    )
+    let result: Vec<u8> = a_decoded
+        .iter()
+        .zip(b_decoded.iter().cycle())
+        .map(|(x1, x2)| x1 ^ x2)
+        .collect();
+
+    Ok(hex::encode(result))
 }
 
-// TODO: make hxh work to make this work.
-pub fn str_x_str(a: &str, b: &str) -> String {
-    hex::encode(
-        a.chars()
-            .zip(b.chars().cycle())
-            .map(|(i, j)| ((i as u8) ^ (j as u8)) as char)
-            .collect::<String>(),
-    )
+pub fn str_x_str(a: &str, b: &str) -> Result<String> {
+    let result: Vec<u8> = a
+        .bytes()
+        .zip(b.bytes().cycle())
+        .map(|(i, j)| i ^ j)
+        .collect();
+
+    Ok(hex::encode(result))
 }
 
-// HACK: Shouldve called the other way around!
-pub fn str_x_byte(s: &str) -> String {
-    hex_x_byte(&hex::encode(s))
+pub fn str_x_byte(s: &str) -> Result<String> {
+    hex_x_byte_inner(&hex::encode(s))
 }
 
-pub fn hex_x_byte(s: &str) -> String {
-    (0..=255)
-        .map(|i| {
-            format!(
-                "{}\n",
-                hex::decode(s)
-                    .expect("Hex cant be decoded!")
-                    .iter()
-                    .map(|b| (b ^ i) as char)
-                    .collect::<String>(),
-            )
+pub fn hex_x_byte(s: &str) -> Result<String> {
+    hex_x_byte_inner(s)
+}
+
+fn hex_x_byte_inner(s: &str) -> Result<String> {
+    let decoded = hex::decode(s).context("Invalid hex string")?;
+
+    let results: Vec<String> = (0..=255)
+        .filter_map(|i| {
+            let bytes: Vec<u8> = decoded.iter().map(|b| b ^ i).collect();
+            if bytes.iter().all(|&b| b.is_ascii_graphic() || b == b' ') {
+                String::from_utf8(bytes).ok()
+            } else {
+                None
+            }
         })
-        .filter(|i| i.is_ascii() && !i.trim().is_empty())
-        .collect()
+        .collect();
+
+    Ok(results.join("\n"))
 }

@@ -15,7 +15,7 @@ pub fn length(s: &str) -> String {
 }
 
 pub fn remove_whitespace(s: &str) -> String {
-    return s.split_whitespace().collect();
+    s.split_whitespace().collect()
 }
 
 //  pub fn unique(s: &str) -> String
