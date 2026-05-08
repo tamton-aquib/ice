@@ -8,10 +8,15 @@ NOTE: Most of the functions can autodetect if its encode or decode.
 
 ### Includes
 - Base: binary, octal, hex, base32, base64
-- General ciphers: a1z23, atbash, etc
-- Caesar ciphers: simple rots, rot13, vigenere, etc
-- Xor: single byte, string vs string, hex vs hex, etc. (wip)
-- check [todo.norg](https://github.com/tamton-aquib/ice/blob/main/todo.norg) for the full list working on.
+- Ciphers: a1z26, atbash, bacon, morse, railfence, playfair
+- Caesar: rot13, caesar, vigenere
+- Xor: single byte, string vs string, hex vs hex
+- Hashing: md5, sha1, sha256, sha512
+- URL: url encode/decode
+- Formatting: lower, upper, reverse, length
+- Extracting: emails, phone numbers, ipv4 addresses
+- Utilities: factor database lookup
+- check [todo.norg](https://github.com/tamton-aquib/ice/blob/main/todo.norg) for the full list
 
 ---
 

@@ -1,47 +1,26 @@
-use atty::Stream;
-use ice::app::cli::{parse_args, Command};
-use pico_args::Arguments;
-use std::{
-    ffi::OsString,
-    io::{self, Read},
-};
-
-fn print_usage() {
-    println!("ICE - A simple CTF tool store.");
-    println!("Usage: ice <SUBCOMMAND> [ARGUMENTS]");
-    println!("Run 'ice help' for a list of available subcommands");
-}
+use clap::Parser;
+use std::io::{self, IsTerminal, Read};
 
 fn main() {
-    let mut args: Vec<OsString> = std::env::args_os().skip(1).collect();
+    let mut args: Vec<String> = std::env::args_os()
+        .map(|s| s.into_string().unwrap())
+        .collect();
 
-    if !atty::is(Stream::Stdin) {
+    let stdin_has_content = !io::stdin().is_terminal();
+
+    if stdin_has_content {
         let mut input = String::new();
         io::stdin().read_to_string(&mut input).unwrap();
         let input = input.trim();
         if !input.is_empty() {
-            args.push(OsString::from(input));
+            args.push(input.to_string());
         }
     }
 
-    let mut args = Arguments::from_vec(args);
+    let cli = ice::app::cli::Cli::try_parse_from(args).unwrap_or_else(|e| {
+        eprintln!("Error: {}", e);
+        std::process::exit(1);
+    });
 
-    let command = match parse_args(&mut args) {
-        Ok(cmd) => cmd,
-        Err(e) => {
-            eprintln!("Error: {}", e);
-            print_usage();
-            return;
-        }
-    };
-
-    match command {
-        Command::Help => print_usage(),
-        Command::Version => println!("ice {}", env!("CARGO_PKG_VERSION")),
-        Command::Unknown(cmd) => {
-            eprintln!("Error: Unknown subcommand '{}'", cmd);
-            print_usage();
-        }
-        _ => command.run(),
-    }
+    cli.command.run();
 }

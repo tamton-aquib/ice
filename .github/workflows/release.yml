@@ -71,11 +71,13 @@ jobs:
 
       - name: Compress binary (Linux/Windows only)
         if: runner.os != 'macOS'
+        # upx --best --lzma target/${{ matrix.target }}/release/ice.exe
+        # upx --best --lzma target/${{ matrix.target }}/release/ice
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-            upx --best --lzma target/${{ matrix.target }}/release/ice.exe
+            upx --ultra-brute target/${{ matrix.target }}/release/ice.exe
           else
-            upx --best --lzma target/${{ matrix.target }}/release/ice
+            upx --ultra-brute target/${{ matrix.target }}/release/ice
           fi
         shell: bash
 
