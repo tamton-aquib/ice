@@ -195,6 +195,10 @@ pub enum Commands {
     Sha512 {
         input: String,
     },
+    #[command(name = "jwt", about = "Decode JWT header and payload (no signature verification)")]
+    Jwt {
+        token: String,
+    },
     #[command(name = "completion", about = "Generate shell completion script")]
     Completion {
         #[arg(value_enum, default_value_t = Shell::Bash)]
@@ -305,6 +309,7 @@ pub fn print_help() {
             ("fdb", "Look up number factors on factordb.com"),
         ]),
         ("Other", &[
+            ("jwt",        "Decode JWT header and payload"),
             ("completion", "Generate shell completion script"),
         ]),
     ];
@@ -483,6 +488,29 @@ impl Commands {
             Commands::Sha512 { input } => {
                 let result = hasher::sha512(input)?;
                 println!("{}", result.trim());
+            }
+            Commands::Jwt { token } => {
+                let parts: Vec<&str> = token.split('.').collect();
+                if parts.len() != 3 {
+                    anyhow::bail!("Invalid JWT: expected 3 dot-separated segments");
+                }
+                let decode_b64url = |input: &str| -> Result<String> {
+                    let padded = match input.len() % 4 {
+                        2 => format!("{}==", input),
+                        3 => format!("{}=", input),
+                        _ => input.to_string(),
+                    };
+                    let standard = padded.replace('-', "+").replace('_', "/");
+                    let bytes = base64::decode(&standard)
+                        .map_err(|e| anyhow::anyhow!("Base64 decode failed: {}", e))?;
+                    String::from_utf8(bytes).map_err(|e| anyhow::anyhow!("Invalid UTF-8: {}", e))
+                };
+                let header = decode_b64url(parts[0])?;
+                let payload = decode_b64url(parts[1])?;
+                let header_json: serde_json::Value = serde_json::from_str(&header)?;
+                let payload_json: serde_json::Value = serde_json::from_str(&payload)?;
+                let output = serde_json::json!({ "header": header_json, "payload": payload_json });
+                println!("{}", serde_json::to_string_pretty(&output)?);
             }
             Commands::Completion { shell } => {
                 let mut cmd = build_cli();

@@ -15,7 +15,7 @@ NOTE: Most of the functions can autodetect if its encode or decode.
 - URL: url encode/decode
 - Formatting: lower, upper, reverse, length
 - Extracting: emails, phone numbers, ipv4 addresses
-- Utilities: factor database lookup
+- Utilities: factor database lookup, JWT decode
 - check [todo.norg](https://github.com/tamton-aquib/ice/blob/main/todo.norg) for the full list
 
 ---
