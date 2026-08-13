@@ -118,6 +118,22 @@ pub enum Commands {
     Length {
         text: String,
     },
+    #[command(about = "Sort lines alphabetically")]
+    Sort {
+        text: String,
+    },
+    #[command(about = "Remove duplicate lines, keeping first occurrence")]
+    Uniq {
+        text: String,
+    },
+    #[command(about = "Title-case each word (e.g. \"hello world\" -> \"Hello World\")")]
+    Title {
+        text: String,
+    },
+    #[command(about = "Capitalize the first letter")]
+    Capitalize {
+        text: String,
+    },
     #[command(about = "A1Z26 cipher — decode numbers to letters", aliases = ["az"])]
     A1Z26 {
         text: String,
@@ -138,6 +154,10 @@ pub enum Commands {
     Rot47 {
         text: String,
     },
+    #[command(about = "ROT18 cipher (ROT13 + ROT5 for digits)")]
+    Rot18 {
+        text: String,
+    },
     #[command(about = "Extract email addresses from text or a file", aliases = ["emails", "mails", "mail"])]
     Email {
         text: String,
@@ -148,6 +168,10 @@ pub enum Commands {
     },
     #[command(name = "ipv4", about = "Extract IPv4 addresses from text or a file", aliases = ["ip", "ips"])]
     Ipv4 {
+        text: String,
+    },
+    #[command(about = "Extract MAC addresses from text or a file", aliases = ["macs"])]
+    Mac {
         text: String,
     },
     #[command(about = "DNA encode/decode (2-bit and codon auto-detect)")]
@@ -270,6 +294,7 @@ pub fn print_help() {
             ("ascii",         "Convert text to/from ASCII codes"),
             ("bacon",         "Baconian cipher encode/decode"),
             ("rot47",         "ROT47 cipher (ASCII 33-126)"),
+            ("rot18",         "ROT18 cipher (ROT13 + ROT5 for digits)"),
             ("playfair",      "Playfair cipher (--decrypt to decrypt)"),
             ("railfence",     "Rail fence cipher (--rails N)"),
             ("dna",           "DNA encode/decode (auto-detects)"),
@@ -297,6 +322,7 @@ pub fn print_help() {
             ("email", "Extract email addresses from text or a file"),
             ("phone", "Extract phone numbers from text or a file"),
             ("ipv4",  "Extract IPv4 addresses from text or a file"),
+            ("mac",   "Extract MAC addresses from text or a file"),
         ]),
         ("Formatting", &[
             ("lower",              "Convert text to lowercase"),
@@ -304,6 +330,10 @@ pub fn print_help() {
             ("remove-whitespace",  "Remove all whitespace from text"),
             ("reverse",            "Reverse the string"),
             ("length",             "Get the length of the string"),
+            ("sort",               "Sort lines alphabetically"),
+            ("uniq",               "Remove duplicate lines"),
+            ("title",              "Title-case each word"),
+            ("capitalize",         "Capitalize the first letter"),
         ]),
         ("Services", &[
             ("fdb", "Look up number factors on factordb.com"),
@@ -414,6 +444,18 @@ impl Commands {
             Commands::Length { text } => {
                 println!("{}", manipulation::length(text).trim());
             }
+            Commands::Sort { text } => {
+                println!("{}", manipulation::sort(text).trim());
+            }
+            Commands::Uniq { text } => {
+                println!("{}", manipulation::unique(text).trim());
+            }
+            Commands::Title { text } => {
+                println!("{}", manipulation::title(text).trim());
+            }
+            Commands::Capitalize { text } => {
+                println!("{}", manipulation::capitalize(text).trim());
+            }
             Commands::A1Z26 { text } => {
                 let result = general::a1z26(text)?;
                 println!("{}", result.trim());
@@ -433,6 +475,9 @@ impl Commands {
             Commands::Rot47 { text } => {
                 println!("{}", caesar::rot47(text).trim());
             }
+            Commands::Rot18 { text } => {
+                println!("{}", caesar::rot18(text).trim());
+            }
             Commands::Email { text } => {
                 let result = extract::extractor("email", text)?;
                 println!("{}", result.trim());
@@ -443,6 +488,10 @@ impl Commands {
             }
             Commands::Ipv4 { text } => {
                 let result = extract::extractor("ip", text)?;
+                println!("{}", result.trim());
+            }
+            Commands::Mac { text } => {
+                let result = extract::extractor("mac", text)?;
                 println!("{}", result.trim());
             }
             Commands::Dna { text } => {

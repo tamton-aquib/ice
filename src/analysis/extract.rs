@@ -34,12 +34,21 @@ fn ips(content: &str) -> Vec<String> {
         .collect()
 }
 
+fn macs(content: &str) -> Vec<String> {
+    Regex::new(r"(?i)([0-9a-f]{2}[:-]){5}[0-9a-f]{2}")
+        .unwrap()
+        .captures_iter(content)
+        .map(|i| i[0].to_string())
+        .collect()
+}
+
 pub fn extractor(xtype: &str, input: &str) -> Result<String> {
     let content = get_input(input)?;
     let matches = match xtype {
         "email" => emails(&content),
         "phone" => phones(&content),
         "ip" => ips(&content),
+        "mac" => macs(&content),
         _ => return Err(anyhow!("Unknown extract type: {}", xtype)),
     };
 

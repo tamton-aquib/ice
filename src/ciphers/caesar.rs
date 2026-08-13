@@ -91,3 +91,14 @@ pub fn rot47(s: &str) -> String {
         })
         .collect()
 }
+
+pub fn rot18(s: &str) -> String {
+    rot13(s)
+        .chars()
+        .map(|c| match c {
+            '0'..='4' => ((c as u8) + 5) as char,
+            '5'..='9' => ((c as u8) - 5) as char,
+            _ => c,
+        })
+        .collect()
+}
