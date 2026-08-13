@@ -1,6 +1,7 @@
 use anyhow::Result;
+use base64::Engine;
 use crate::{
-    analysis::{extract, manipulation},
+    analysis::{analyze, extract, manipulation},
     base::base,
     ciphers::{caesar, general::general, morse, xor},
     hasher::hasher,
@@ -250,6 +251,43 @@ pub enum Commands {
         #[arg(short, long)]
         decrypt: bool,
     },
+    #[command(about = "Letter frequency analysis", aliases = ["freq"])]
+    Frequency {
+        text: String,
+    },
+    #[command(about = "Shannon entropy of a string or file (bits/byte)", aliases = ["ent"])]
+    Entropy {
+        input: String,
+    },
+    #[command(name = "hashid", about = "Guess hash type from length/format", aliases = ["hash-id"])]
+    HashId {
+        hash: String,
+    },
+    #[command(about = "Detect file type via magic bytes", aliases = ["ftype", "magic"])]
+    Filetype {
+        file: String,
+    },
+    #[command(about = "Extract flag-like patterns such as flag{...}", aliases = ["flags"])]
+    Flag {
+        text: String,
+    },
+    #[command(name = "kxs", about = "Repeating-key XOR — guess keysize, derive key, decrypt", aliases = ["xorkey", "repxor"])]
+    KeyXByte {
+        text: String,
+    },
+    #[command(about = "Keyboard-shift cipher — --dir 1 to move keys left, -1 to move right", aliases = ["kb"])]
+    Keyboard {
+        text: String,
+        #[arg(short, long)]
+        dir: Option<i8>,
+    },
+    #[command(about = "Search a binary file for a string (prints offsets)", aliases = ["grep", "findstr"])]
+    Search {
+        file: String,
+        query: String,
+    },
+    #[command(about = "Print the ice man page")]
+    Man,
 }
 
 pub fn build_cli() -> Command {
@@ -301,12 +339,14 @@ pub fn print_help() {
             ("affine",        "Affine cipher ax+b (--decrypt to decrypt)"),
             ("bifid",         "Bifid cipher with a key (--decrypt)"),
             ("substitution",  "Substitution cipher (--decrypt to decrypt)"),
+            ("keyboard",      "Keyboard-shift cipher (--dir 1 or -1)"),
         ]),
         ("XOR", &[
             ("hxh", "XOR two hex strings"),
             ("sxs", "XOR two strings (returns hex)"),
             ("sxb", "XOR string against all single-byte keys"),
             ("hxb", "XOR hex string against all single-byte keys"),
+            ("kxs", "Repeating-key XOR (keysize + key recovery)"),
         ]),
         ("Hashing", &[
             ("md5",    "MD5 hash a string or file"),
@@ -338,9 +378,18 @@ pub fn print_help() {
         ("Services", &[
             ("fdb", "Look up number factors on factordb.com"),
         ]),
+        ("Analysis", &[
+            ("frequency", "Letter frequency analysis"),
+            ("entropy",   "Shannon entropy of a string or file"),
+            ("hashid",    "Guess hash type from length/format"),
+            ("filetype",  "Detect file type via magic bytes"),
+            ("flag",      "Extract flag-like patterns"),
+            ("search",    "Search a binary file for a string"),
+        ]),
         ("Other", &[
             ("jwt",        "Decode JWT header and payload"),
             ("completion", "Generate shell completion script"),
+            ("man",        "Print the ice man page"),
         ]),
     ];
 
@@ -550,7 +599,8 @@ impl Commands {
                         _ => input.to_string(),
                     };
                     let standard = padded.replace('-', "+").replace('_', "/");
-                    let bytes = base64::decode(&standard)
+                    let bytes = base64::engine::general_purpose::STANDARD
+                        .decode(&standard)
                         .map_err(|e| anyhow::anyhow!("Base64 decode failed: {}", e))?;
                     String::from_utf8(bytes).map_err(|e| anyhow::anyhow!("Invalid UTF-8: {}", e))
                 };
@@ -591,7 +641,44 @@ impl Commands {
                 let result = general::substitution(text, key, *decrypt)?;
                 println!("{}", result.trim());
             }
+            Commands::Frequency { text } => {
+                println!("{}", analyze::frequency(text).trim());
+            }
+            Commands::Entropy { input } => {
+                println!("{}", analyze::entropy(input)?.trim());
+            }
+            Commands::HashId { hash } => {
+                println!("{}", hasher::hashid(hash).trim());
+            }
+            Commands::Filetype { file } => {
+                println!("{}", analyze::filetype(file)?.trim());
+            }
+            Commands::Flag { text } => {
+                let result = extract::extractor("flag", text)?;
+                println!("{}", result.trim());
+            }
+            Commands::KeyXByte { text } => {
+                println!("{}", xor::key_x_byte(text)?.trim());
+            }
+            Commands::Keyboard { text, dir } => {
+                println!("{}", general::keyboard(text, *dir)?.trim());
+            }
+            Commands::Search { file, query } => {
+                println!("{}", analyze::read_binary(file, query)?.trim());
+            }
+            Commands::Man => {
+                print_man()?;
+            }
         }
         Ok(())
+    }
+}
+
+fn print_man() -> Result<()> {
+    let cmd = build_cli();
+    match clap_mangen::Man::new(cmd).render(&mut std::io::stdout()) {
+        Ok(()) => Ok(()),
+        Err(e) if e.kind() == std::io::ErrorKind::BrokenPipe => Ok(()),
+        Err(e) => Err(anyhow::anyhow!("Failed to render man page: {}", e)),
     }
 }

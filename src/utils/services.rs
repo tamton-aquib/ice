@@ -12,16 +12,16 @@ struct Data {
 }
 
 pub fn factordb(s: &str) -> Result<String> {
-    let url = format!("http://factordb.com/api?query={}", s);
+    let url = format!("https://factordb.com/api?query={}", s);
 
-    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        let mut req = ureq::get(&url);
-        req.timeout(Duration::from_secs(10));
-        req.call()
-    }))
-    .map_err(|_| anyhow::anyhow!("Request to factordb.com failed (connection error)"))?;
+    let agent = ureq::AgentBuilder::new()
+        .timeout(Duration::from_secs(10))
+        .build();
 
-    let body = result
+    let body = agent
+        .get(&url)
+        .call()
+        .map_err(|e| anyhow::anyhow!("Request to factordb.com failed: {}", e))?
         .into_string()
         .map_err(|e| anyhow::anyhow!("Failed to read response from factordb: {}", e))?;
 

@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use crate::app::constants::{ALPHABETS, ALT_PHABETS, BACON1, BACON2, DNA1, DNA2};
 use crate::utils::utils;
+use std::sync::LazyLock;
 
 pub fn url_encode(s: &str) -> Result<String> {
     Ok(urlencoding::encode(s).into())
@@ -169,7 +170,11 @@ pub fn dna(s: &str) -> Result<String> {
                     u8::from_str_radix(byte_str, 2).unwrap_or(0) as char
                 })
                 .collect();
-            results.push(format!("[2-bit Decode]: {}", decoded));
+            results.push(format!(
+                "[{}]: {}",
+                crate::utils::color::green("2-bit Decode"),
+                decoded
+            ));
         }
 
         if s.len() >= 3 {
@@ -188,7 +193,11 @@ pub fn dna(s: &str) -> Result<String> {
                 })
                 .collect();
             if !codon_result.is_empty() {
-                results.push(format!("[Codon Decode]: {}", codon_result));
+                results.push(format!(
+                    "[{}]: {}",
+                    crate::utils::color::green("Codon Decode"),
+                    codon_result
+                ));
             }
         }
 
@@ -219,7 +228,11 @@ pub fn dna(s: &str) -> Result<String> {
             })
             .collect();
 
-        Ok(format!("[DNA Encode]: {}", encoded))
+        Ok(format!(
+            "[{}]: {}",
+            crate::utils::color::green("DNA Encode"),
+            encoded
+        ))
     }
 }
 
@@ -229,9 +242,12 @@ pub fn railfence(s: &str, rails: Option<usize>) -> Result<String> {
         Some(_) => Err(anyhow!("Rail count must be greater than 1")),
         None => {
             eprintln!(
-                "Warning: No rail count provided. Brute-forcing all possible counts..."
+                "{}",
+                crate::utils::color::yellow(
+                    "Warning: No rail count provided. Brute-forcing all possible counts..."
+                )
             );
-            let results: Vec<String> = (2..s.len().max(3))
+            let results: Vec<String> = (2..s.len())
                 .map(|r| {
                     let decrypted = railfence_decrypt(s, r);
                     format!("[rails={}] {}\n", r, decrypted)
@@ -311,12 +327,14 @@ pub fn bacon(s: &str) -> Result<String> {
     Ok(format!("1: {}\n2: {}", str_take1, str_take2))
 }
 
+static REV_ALPHABET: LazyLock<String> = LazyLock::new(|| ALPHABETS.chars().rev().collect());
+
 pub fn atbash(s: &str) -> Result<String> {
     Ok(s.to_lowercase()
         .chars()
         .map(|c| {
             let idx = ALPHABETS.find(c).unwrap_or(27);
-            ALPHABETS.chars().rev().nth(idx).unwrap_or(' ')
+            REV_ALPHABET.chars().nth(idx).unwrap_or(' ')
         })
         .collect())
 }
@@ -520,5 +538,66 @@ pub fn substitution(s: &str, key: &str, decrypt: bool) -> Result<String> {
             })
             .collect();
         Ok(result)
+    }
+}
+
+static KEYBOARD_ROWS: [&str; 4] = [
+    "1234567890-=",
+    "qwertyuiop[]\\",
+    "asdfghjkl;'",
+    "zxcvbnm,./",
+];
+
+fn keyboard_neighbors() -> std::collections::HashMap<char, (Option<char>, Option<char>)> {
+    let mut map = std::collections::HashMap::new();
+    for row in KEYBOARD_ROWS.iter() {
+        let chars: Vec<char> = row.chars().collect();
+        for (i, &c) in chars.iter().enumerate() {
+            let left = if i > 0 { Some(chars[i - 1]) } else { None };
+            let right = chars.get(i + 1).copied();
+            map.insert(c, (left, right));
+        }
+    }
+    map
+}
+
+pub fn keyboard(s: &str, dir: Option<i8>) -> Result<String> {
+    if let Some(d) = dir {
+        if d.abs() != 1 {
+            return Err(anyhow!("--dir must be 1 (move keys left) or -1 (move keys right)"));
+        }
+    }
+    let map = keyboard_neighbors();
+    let apply = |d: i8| -> String {
+        s.chars()
+            .map(|c| {
+                let lower = c.to_ascii_lowercase();
+                match map.get(&lower) {
+                    Some(&(left, right)) => {
+                        let shifted = if d > 0 {
+                            left.unwrap_or(lower)
+                        } else {
+                            right.unwrap_or(lower)
+                        };
+                        if c.is_ascii_uppercase() {
+                            shifted.to_ascii_uppercase()
+                        } else {
+                            shifted
+                        }
+                    }
+                    None => c,
+                }
+            })
+            .collect()
+    };
+    match dir {
+        Some(d) => Ok(apply(d)),
+        None => Ok(format!(
+            "[{}]\n{}\n\n[{}]\n{}",
+            crate::utils::color::cyan("hands shifted right -> move each key left"),
+            apply(1),
+            crate::utils::color::cyan("hands shifted left -> move each key right"),
+            apply(-1)
+        )),
     }
 }

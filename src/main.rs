@@ -22,13 +22,31 @@ fn main() {
         }
     }
 
+    let candidate = args
+        .get(1)
+        .filter(|a| !a.starts_with('-'))
+        .cloned();
+
     let cli = ice::app::cli::Cli::try_parse_from(args).unwrap_or_else(|e| {
-        eprintln!("Error: {}", e);
+        let suggestion = if e.kind() == clap::error::ErrorKind::InvalidSubcommand {
+            candidate
+                .as_deref()
+                .and_then(ice::utils::fuzzy::suggest_subcommand)
+        } else {
+            None
+        };
+        match suggestion {
+            Some(list) => {
+                eprintln!("{}", ice::utils::color::red(&format!("Error: {}", e)));
+                eprintln!("{}", ice::utils::color::yellow(&format!("Did you mean: {}", list)));
+            }
+            None => eprintln!("{}", ice::utils::color::red(&format!("Error: {}", e))),
+        }
         std::process::exit(1);
     });
 
     if let Err(e) = cli.command.run() {
-        eprintln!("Error: {}", e);
+        eprintln!("{}", ice::utils::color::red(&format!("Error: {}", e)));
         std::process::exit(1);
     }
 }

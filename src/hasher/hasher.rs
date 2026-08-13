@@ -9,11 +9,20 @@ use std::path::Path;
 
 fn hash_file<D: Digest>(path: &str) -> Result<String> {
     let mut file = File::open(path).context("Failed to open file")?;
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer)
-        .context("Failed to read file")?;
-    let hash = D::digest(&buffer);
-    Ok(hash.iter().map(|b| format!("{:02x}", b)).collect())
+    let mut hasher = D::new();
+    let mut buffer = [0u8; 65536];
+    loop {
+        let n = file.read(&mut buffer).context("Failed to read file")?;
+        if n == 0 {
+            break;
+        }
+        hasher.update(&buffer[..n]);
+    }
+    Ok(hasher
+        .finalize()
+        .iter()
+        .map(|b| format!("{:02x}", b))
+        .collect())
 }
 
 fn hash_str<D: Digest>(s: &str) -> String {
@@ -51,4 +60,31 @@ pub fn sha512(input: &str) -> Result<String> {
     } else {
         Ok(hash_str::<Sha512>(input))
     }
+}
+
+pub fn hashid(s: &str) -> String {
+    let s = s.trim();
+    if s.is_empty() {
+        return String::from("(empty input)");
+    }
+    let len = s.len();
+    let hex = s.chars().all(|c| c.is_ascii_hexdigit());
+    let mut matches: Vec<&str> = Vec::new();
+    match (len, hex) {
+        (32, true) => matches.push("MD5"),
+        (40, true) => matches.push("SHA-1"),
+        (56, true) => matches.push("SHA-224"),
+        (64, true) => matches.push("SHA-256"),
+        (96, true) => matches.push("SHA-384"),
+        (128, true) => matches.push("SHA-512"),
+        (16, true) => matches.push("CRC32 (hex) / MySQL3 / LM"),
+        (32, false) => matches.push("NTLM (or non-hex MD5)"),
+        (16, false) => matches.push("CRC32 (raw)"),
+        (64, false) => matches.push("Base64 blob (may be a sha256 variant)"),
+        _ => {}
+    }
+    if matches.is_empty() {
+        matches.push("unknown hash format");
+    }
+    matches.join(", ")
 }

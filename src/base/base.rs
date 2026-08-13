@@ -1,4 +1,6 @@
 use anyhow::{Context, Result};
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use crate::utils::utils;
 
 fn is_b64_char(c: char) -> bool {
@@ -29,9 +31,9 @@ where
 pub fn b64(s: &str) -> Result<String> {
     let looks_like_b64 = !s.trim().is_empty() && s.trim().chars().all(is_b64_char);
     if looks_like_b64 {
-        decode_or_encode(s, |s| base64::decode(s).ok(), |s| base64::encode(s))
+        decode_or_encode(s, |s| STANDARD.decode(s).ok(), |s| STANDARD.encode(s))
     } else {
-        Ok(base64::encode(s))
+        Ok(STANDARD.encode(s))
     }
 }
 
@@ -81,74 +83,94 @@ fn is_b62_char(c: char) -> bool {
     matches!(c, '0'..='9' | 'A'..='Z' | 'a'..='z')
 }
 
-fn b62_decode(s: &str) -> Option<Vec<u8>> {
-    let mut num = 0u128;
-    for c in s.bytes() {
-        let val = match c {
-            b'0'..=b'9' => (c - b'0') as u128,
-            b'A'..=b'Z' => (c - b'A' + 10) as u128,
-            b'a'..=b'z' => (c - b'a' + 36) as u128,
+fn b62_decode_str(s: &str) -> Option<Vec<u8>> {
+    let s = s.trim();
+    if s.is_empty() {
+        return Some(Vec::new());
+    }
+    let mut out = Vec::with_capacity(s.len() * 7 / 10 + 1);
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        let group_len = (bytes.len() - i).min(10);
+        let byte_len = match group_len {
+            2 => 1,
+            3 => 2,
+            5 => 3,
+            6 => 4,
+            7 => 5,
+            9 => 6,
+            10 => 7,
             _ => return None,
         };
-        num = num.checked_mul(62)?;
-        num = num.checked_add(val)?;
+        let mut val: u64 = 0;
+        for &b in &bytes[i..i + group_len] {
+            val = match b {
+                b'0'..=b'9' => val * 62 + (b - b'0') as u64,
+                b'A'..=b'Z' => val * 62 + (b - b'A' + 10) as u64,
+                b'a'..=b'z' => val * 62 + (b - b'a' + 36) as u64,
+                _ => return None,
+            };
+        }
+        if byte_len < 8 && val >= (1u64 << (byte_len * 8)) {
+            return None;
+        }
+        let be = val.to_be_bytes();
+        out.extend_from_slice(&be[8 - byte_len..]);
+        i += group_len;
     }
-    if num == 0 {
-        return Some(vec![0]);
+    Some(out)
+}
+
+const B62_CHARSET: &[u8] =
+    b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+fn b62_width(bytes: usize) -> usize {
+    match bytes {
+        1 => 2,
+        2 => 3,
+        3 => 5,
+        4 => 6,
+        5 => 7,
+        6 => 9,
+        7 => 10,
+        _ => 0,
     }
-    let mut result = Vec::new();
-    while num > 0 {
-        result.push((num % 256) as u8);
-        num /= 256;
+}
+
+fn b62_encode_bytes(bytes: &[u8]) -> String {
+    if bytes.is_empty() {
+        return String::new();
     }
-    result.reverse();
-    Some(result)
+    let mut out = String::with_capacity(bytes.len() + bytes.len() / 2);
+    for chunk in bytes.chunks(7) {
+        let mut val: u64 = 0;
+        for &b in chunk {
+            val = val * 256 + b as u64;
+        }
+        let width = b62_width(chunk.len());
+        let mut digits = vec![b'0'; width];
+        for i in (0..width).rev() {
+            digits[i] = B62_CHARSET[(val % 62) as usize];
+            val /= 62;
+        }
+        out.push_str(std::str::from_utf8(&digits).unwrap());
+    }
+    out
+}
+
+fn b62_encode_str(s: &str) -> String {
+    b62_encode_bytes(s.as_bytes())
 }
 
 pub fn b62(s: &str) -> Result<String> {
     let s = s.trim();
     let looks_like_b62 = !s.is_empty() && s.chars().all(is_b62_char);
     if looks_like_b62 {
-        decode_or_encode(s, b62_decode, |s| {
-            let bytes = s.as_bytes();
-            let mut num = 0u128;
-            for &b in bytes {
-                num = num * 256 + b as u128;
-            }
-            if num == 0 {
-                return "0".to_string();
-            }
-            const CHARSET: &[u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            let mut result = Vec::new();
-            while num > 0 {
-                result.push(CHARSET[(num % 62) as usize]);
-                num /= 62;
-            }
-            result.reverse();
-            String::from_utf8(result).unwrap()
-        })
+        decode_or_encode(s, b62_decode_str, b62_encode_str)
     } else {
-        Ok(b62_encode(s))
+        Ok(b62_encode_str(s))
     }
-}
-
-fn b62_encode(s: &str) -> String {
-    let bytes = s.as_bytes();
-    let mut num = 0u128;
-    for &b in bytes {
-        num = num * 256 + b as u128;
-    }
-    if num == 0 {
-        return "0".to_string();
-    }
-    const CHARSET: &[u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let mut result = Vec::new();
-    while num > 0 {
-        result.push(CHARSET[(num % 62) as usize]);
-        num /= 62;
-    }
-    result.reverse();
-    String::from_utf8(result).unwrap()
 }
 
 pub fn b85(s: &str) -> Result<String> {
@@ -178,11 +200,6 @@ fn ascii85_encode(data: &[u8]) -> String {
         } else {
             let mut encoded = ['!'; 5];
             let n = chunk.len() + 1;
-            for i in (0..n).rev() {
-                encoded[i] = char::from_u32((val % 85) + 33).unwrap();
-                let _ = val / 85;
-            }
-            // Recalculate properly
             let mut v = val;
             for i in (0..5).rev() {
                 encoded[i] = char::from_u32((v % 85) + 33).unwrap();
@@ -243,10 +260,11 @@ pub fn hexadecimal(s: &str) -> Result<String> {
         let bytes = hex::decode(trimmed).context("Invalid hex string")?;
         Ok(String::from_utf8_lossy(&bytes).into_owned())
     } else {
-        Ok(s.chars()
-            .fold(String::new(), |acc, i| format!("{acc}{:x} ", u32::from(i)))
-            .trim()
-            .to_string())
+        let mut out = String::with_capacity(s.len() * 3);
+        for c in s.chars() {
+            out.push_str(&format!("{:x} ", u32::from(c)));
+        }
+        Ok(out.trim_end().to_string())
     }
 }
 
@@ -262,12 +280,11 @@ pub fn octal(s: &str) -> Result<String> {
             .collect();
         Ok(chars)
     } else {
-        Ok(s.chars()
-            .fold(String::new(), |acc, i| {
-                format!("{acc}{:03o} ", u32::from(i))
-            })
-            .trim()
-            .to_string())
+        let mut out = String::with_capacity(s.len() * 4);
+        for c in s.chars() {
+            out.push_str(&format!("{:03o} ", u32::from(c)));
+        }
+        Ok(out.trim_end().to_string())
     }
 }
 
@@ -283,11 +300,10 @@ pub fn binary(s: &str) -> Result<String> {
             .collect();
         Ok(chars)
     } else {
-        Ok(s.chars()
-            .fold(String::new(), |acc, i| {
-                format!("{acc}{:08b} ", u32::from(i))
-            })
-            .trim()
-            .to_string())
+        let mut out = String::with_capacity(s.len() * 9);
+        for c in s.chars() {
+            out.push_str(&format!("{:08b} ", u32::from(c)));
+        }
+        Ok(out.trim_end().to_string())
     }
 }
