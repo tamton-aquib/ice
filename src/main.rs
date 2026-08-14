@@ -28,6 +28,13 @@ fn main() {
         .cloned();
 
     let cli = ice::app::cli::Cli::try_parse_from(args).unwrap_or_else(|e| {
+        match e.kind() {
+            clap::error::ErrorKind::DisplayHelp | clap::error::ErrorKind::DisplayVersion => {
+                print!("{}", e);
+                std::process::exit(0);
+            }
+            _ => {}
+        }
         let suggestion = if e.kind() == clap::error::ErrorKind::InvalidSubcommand {
             candidate
                 .as_deref()
