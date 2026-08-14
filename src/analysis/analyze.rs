@@ -1,6 +1,50 @@
 use anyhow::{anyhow, Context, Result};
 use std::path::Path;
 
+pub fn json_format(s: &str, minify: bool) -> Result<String> {
+    let v: serde_json::Value = serde_json::from_str(s).context("Invalid JSON")?;
+    if minify {
+        Ok(serde_json::to_string(&v)?)
+    } else {
+        Ok(serde_json::to_string_pretty(&v)?)
+    }
+}
+
+pub fn epoch(s: &str) -> Result<String> {
+    use time::format_description::well_known::Rfc3339;
+    use time::macros::format_description;
+    use time::{Date, OffsetDateTime};
+
+    let s = s.trim();
+    if s.eq_ignore_ascii_case("now") {
+        let now = OffsetDateTime::now_utc();
+        return Ok(format!("{}  ({})", now.unix_timestamp(), now));
+    }
+    if let Ok(ts) = s.parse::<i64>() {
+        let dt = OffsetDateTime::from_unix_timestamp(ts).context("Timestamp out of range")?;
+        return Ok(format!("{}  ({})", ts, dt));
+    }
+    if let Ok(dt) = OffsetDateTime::parse(s, &Rfc3339) {
+        return Ok(format!("{}  ({})", dt.unix_timestamp(), dt));
+    }
+    for fmt in [
+        format_description!("[year]-[month]-[day] [hour]:[minute]:[second]"),
+        format_description!("[year]-[month]-[day] [hour]:[minute]"),
+    ] {
+        if let Ok(dt) = time::PrimitiveDateTime::parse(s, &fmt) {
+            let dt = dt.assume_utc();
+            return Ok(format!("{}  ({})", dt.unix_timestamp(), dt));
+        }
+    }
+    if let Ok(d) = Date::parse(s, &format_description!("[year]-[month]-[day]")) {
+        let dt = d.with_hms(0, 0, 0).context("Invalid time")?.assume_utc();
+        return Ok(format!("{}  ({})", dt.unix_timestamp(), dt));
+    }
+    Err(anyhow!(
+        "Unrecognized input. Use a unix timestamp, 'now', or a date like '2023-11-14 22:13:20'"
+    ))
+}
+
 pub fn frequency(s: &str) -> String {
     let mut counts = std::collections::BTreeMap::<char, usize>::new();
     let mut total = 0usize;

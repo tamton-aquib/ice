@@ -135,6 +135,21 @@ pub enum Commands {
     Capitalize {
         text: String,
     },
+    #[command(about = "Trim leading/trailing whitespace")]
+    Trim {
+        text: String,
+    },
+    #[command(about = "Count occurrences of a substring")]
+    Count {
+        text: String,
+        needle: String,
+    },
+    #[command(about = "Convert case — --style snake|kebab|camel|pascal (default: all)")]
+    Case {
+        text: String,
+        #[arg(short, long)]
+        style: Option<String>,
+    },
     #[command(about = "A1Z26 cipher — decode numbers to letters", aliases = ["az"])]
     A1Z26 {
         text: String,
@@ -259,6 +274,16 @@ pub enum Commands {
     Entropy {
         input: String,
     },
+    #[command(about = "Pretty-print or minify JSON")]
+    Json {
+        text: String,
+        #[arg(long)]
+        minify: bool,
+    },
+    #[command(about = "Convert between unix timestamps and dates (or 'now')")]
+    Epoch {
+        input: String,
+    },
     #[command(name = "hashid", about = "Guess hash type from length/format", aliases = ["hash-id"])]
     HashId {
         hash: String,
@@ -374,6 +399,9 @@ pub fn print_help() {
             ("uniq",               "Remove duplicate lines"),
             ("title",              "Title-case each word"),
             ("capitalize",         "Capitalize the first letter"),
+            ("trim",               "Trim leading/trailing whitespace"),
+            ("count",              "Count occurrences of a substring"),
+            ("case",               "Convert case (snake/kebab/camel/pascal)"),
         ]),
         ("Services", &[
             ("fdb", "Look up number factors on factordb.com"),
@@ -385,6 +413,8 @@ pub fn print_help() {
             ("filetype",  "Detect file type via magic bytes"),
             ("flag",      "Extract flag-like patterns"),
             ("search",    "Search a binary file for a string"),
+            ("json",      "Pretty-print or minify JSON"),
+            ("epoch",     "Convert unix timestamps to dates and back"),
         ]),
         ("Other", &[
             ("jwt",        "Decode JWT header and payload"),
@@ -504,6 +534,15 @@ impl Commands {
             }
             Commands::Capitalize { text } => {
                 println!("{}", manipulation::capitalize(text).trim());
+            }
+            Commands::Trim { text } => {
+                println!("{}", manipulation::trim(text).trim());
+            }
+            Commands::Count { text, needle } => {
+                println!("{}", manipulation::count(text, needle).trim());
+            }
+            Commands::Case { text, style } => {
+                println!("{}", manipulation::case(text, style.as_deref())?.trim());
             }
             Commands::A1Z26 { text } => {
                 let result = general::a1z26(text)?;
@@ -646,6 +685,12 @@ impl Commands {
             }
             Commands::Entropy { input } => {
                 println!("{}", analyze::entropy(input)?.trim());
+            }
+            Commands::Json { text, minify } => {
+                println!("{}", analyze::json_format(text, *minify)?.trim());
+            }
+            Commands::Epoch { input } => {
+                println!("{}", analyze::epoch(input)?.trim());
             }
             Commands::HashId { hash } => {
                 println!("{}", hasher::hashid(hash).trim());
